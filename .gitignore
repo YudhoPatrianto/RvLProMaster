@@ -4,3 +4,6 @@
 # Hide Config/.env
 **/.env
 RvLProMaster/config/.env
+
+# Hide main.py
+**/main.py
