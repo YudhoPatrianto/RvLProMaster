@@ -29,7 +29,7 @@ class Bot:
             parse_mode: Literal['HTML', 'Markdown', 'MarkdownV2'] = 'MarkdownV2',
             disable_notification: bool | None = None,
             protect_content: bool | None = None,
-            reply_message: int | None = None,
+            reply_message: int | str | None = None,
         ):
             """Use this method to send text messages
 
@@ -39,7 +39,7 @@ class Bot:
                 parse_mode (Literal[&#39;HTML&#39;, &#39;Markdown&#39;, &#39;MarkdownV2&#39;]): Mode for parsing entities in the message text, Default MarkdownV2
                 disable_notification (bool): Sends the message silently. Users will receive a notification with no sound.
                 protect_content (bool): Protects the contents of the sent message from forwarding and saving.
-                reply_message (int): Reply Message? Defaults to None.
+                reply_message (int | str): Reply Message? Defaults to None.
             """
             payload = {
                 'chat_id': chat_id,
