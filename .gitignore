@@ -1,2 +1,6 @@
 # Hide Virtual Environment
 *.venv
+
+# Hide Config/.env
+**/.env
+RvLProMaster/config/.env
