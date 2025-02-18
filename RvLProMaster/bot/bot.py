@@ -54,5 +54,12 @@ class Bot:
                 r_data = r.json()
                 return r_data
         
+        @staticmethod
+        async def getMe():
+            async with AsyncClient() as client:
+                r = await client.get(f"{endpoint}/getMe")
+                r_data = r.json()
+                return r_data
+        
 # create Istance bot
 bot = Bot()
