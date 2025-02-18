@@ -7,3 +7,6 @@ RvLProMaster/config/.env
 
 # Hide main.py
 **/main.py
+
+# Hide vscode settings
+**/.vscode
