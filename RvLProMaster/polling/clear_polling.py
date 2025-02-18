@@ -12,5 +12,4 @@ async def clear_log():
             payload = {'offset': l + 1}
             await client.get(f"{endpoint}/getUpdates", params=payload)
         else:
-            print("No Polling Cleared, Skipping!")
             pass

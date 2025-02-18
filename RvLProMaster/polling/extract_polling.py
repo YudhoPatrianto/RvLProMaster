@@ -1,6 +1,8 @@
 from .polling import polling
 from json import dumps
 from typing import Optional, Literal
+from functools import wraps
+import asyncio
 
 class telegram_types:
     def __init__(self):
@@ -44,4 +46,17 @@ class telegram_types:
             except:
                 pass
 
-Types = telegram_types()
+types = telegram_types()
+
+def run_bot():
+    def wrapper(func):
+        @wraps(func)
+        async def wrapped(*args, **kwargs):
+            while True:
+                await types.RunBOT()
+                await asyncio.sleep(1)
+                await func(*args, **kwargs)
+        return wrapped
+    return wrapper
+
+RunBOT = run_bot()

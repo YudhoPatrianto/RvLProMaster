@@ -1,1 +1,1 @@
-from .extract_polling import Types
+from .extract_polling import types, RunBOT
