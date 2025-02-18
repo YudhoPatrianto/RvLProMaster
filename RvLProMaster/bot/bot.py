@@ -61,5 +61,37 @@ class Bot:
                 r_data = r.json()
                 return r_data
         
+        @staticmethod
+        async def editMessageText(
+            chat_id: int | str | None = None,
+            message_id: int | str | None = None,
+            text: str | None = None,
+            parse_mode: Literal['HTML', 'Markdown', 'MarkdownV2'] = 'MarkdownV2',
+            reply_message: int | str | None = None
+        ):
+            """Use this method to edit text and game messages. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned. Note that business messages that were not sent by the bot and do not contain an inline keyboard can only be edited within 48 hours from the time they were sent.
+
+            Args:
+                chat_id (int | str | None): Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+                message_id (int | str | None): Required if inline_message_id is not specified. Identifier of the message to edit
+                text (str | None): 	New text of the message, 1-4096 characters after entities parsing
+                parse_mode (Literal[&#39;HTML&#39;, &#39;Markdown&#39;, &#39;MarkdownV2&#39;]): Mode for parsing entities in the message text.
+                reply_message (int | str | None): Reply Message? Defaults to None.
+
+            Returns:
+                _type_: _description_
+            """
+            async with AsyncClient() as client:
+                payload = {
+                    'chat_id': chat_id,
+                    'message_id': message_id,
+                    'text': text,
+                    'parse_mode': parse_mode,
+                    'reply_to_message_id': reply_message
+                }
+                r = await client.post(f"{endpoint}/editMessageText", json=payload)
+                r_data = r.json()
+                return r_data
+        
 # create Istance bot
 bot = Bot()
