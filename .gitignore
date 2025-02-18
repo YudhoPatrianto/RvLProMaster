@@ -10,3 +10,6 @@ RvLProMaster/config/.env
 
 # Hide vscode settings
 **/.vscode
+
+# Hide pycache
+**/__pycache__
