@@ -48,15 +48,22 @@ class telegram_types:
 
 types = telegram_types()
 
-def run_bot():
+def RunBOT(always_run: bool = True):
     def wrapper(func):
         @wraps(func)
         async def wrapped(*args, **kwargs):
-            while True:
+            if always_run == True:
+                print(f"Detected Parameters always_run\nStatus: {always_run} (Always Running)\nRunning BOT")
+                while True:
+                    await types.RunBOT()
+                    await asyncio.sleep(1)
+                    await func(*args, **kwargs)
+            elif always_run == False:
+                print(f"Detected Parameters always_run\nStatus: {always_run} (Only Run Once)\nRunning BOT")
                 await types.RunBOT()
                 await asyncio.sleep(1)
                 await func(*args, **kwargs)
+            else:
+                print(f"Please Spesify always_run parameter\nIf Set To True BOT Will Receive The Latest Polls Continuously (Real Time) And Send Any Response Method Only Once\nIf Set To False BOT Will Receive Latest Poll Once And Send Any Response Method Only Once Then Bot Will Stop")
         return wrapped
     return wrapper
-
-RunBOT = run_bot()
