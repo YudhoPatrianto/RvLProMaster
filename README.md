@@ -25,12 +25,12 @@ python3 main.py
 
 #### Usage:
 ```python
-from RvLProMaster import Types, bot
+from RvLProMaster import types, bot, RunBOT
 import asyncio
 
+@RunBOT
 async def MyBots():
     while True: # Add This If Your Bot Still Want's Running
-        types = Types.RunBOT()
         if types.text == "/start":
             await bot.Methods.sendMessage(types.chat_id, "*Hi I'm From `/start`*","MarkdownV2")
 
