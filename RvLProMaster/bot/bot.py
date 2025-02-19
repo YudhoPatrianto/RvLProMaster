@@ -93,5 +93,18 @@ class Bot:
                 r_data = r.json()
                 return r_data
         
+        @staticmethod
+        async def deleteMessage(
+            chat_id: int | str | None = None,
+            message_id: int | str | None = None 
+        ):
+            async with AsyncClient() as client:
+                payload = {
+                    'chat_id': chat_id,
+                    'message_id': message_id
+                }
+                r = await client.post(f"{endpoint}/deleteMessage", json=payload)
+                r_data = r.json()
+                return r_data
 # create Istance bot
 bot = Bot()
