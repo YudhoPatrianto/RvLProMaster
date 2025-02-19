@@ -13,6 +13,12 @@ class telegram_types:
         self.text = ''
         self.reply_message = ''
         
+        # User Information
+        self.first_name = ''
+        self.last_name = ''
+        self.username = ''
+        self.user_id = ''
+        
     # Save Polling 
     def savePolling(self, out_polling):
         if 'message' in out_polling:
@@ -31,6 +37,13 @@ class telegram_types:
                     self.chat_id = out_polling['message']['chat'].get('id','')
                     self.text = out_polling['message'].get('text','')
                     self.reply_message = out_polling['message'].get('message_id', '')
+                    
+                    # User Information
+                    self.first_name = out_polling['message']['from'].get('first_name','')
+                    self.last_name = out_polling['message']['from'].get('last_name','')
+                    self.username = out_polling['message']['from'].get('username','')
+                    self.user_id = out_polling['message']['from'].get('id','')
+                    
                     # Save Polling
                     if save_polling == True:
                         self.savePolling(out_polling)
