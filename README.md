@@ -30,8 +30,7 @@ import asyncio
 
 @RunBOT(always_run=True) # Set True If You Want's Bot Always Run, But If You Set False BOT Only Run Just Once
 async def MyBots():
-    while True: # Add This If Your Bot Still Want's Running
-        if types.text == "/start":
-            await bot.Methods.sendMessage(types.chat_id, "*Hi I'm From `/start`*","MarkdownV2")
+    if types.text == "/start":
+        await bot.Methods.sendMessage(types.chat_id, "*Hi I'm From `/start`*","MarkdownV2")
 
 asyncio.run(MyBots())
