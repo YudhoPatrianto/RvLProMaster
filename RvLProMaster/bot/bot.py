@@ -35,7 +35,7 @@ class Bot:
 
             Args:
                 chat_id (int | str | None): Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-                text (str | None): _description_. Defaults to None.
+                text (str | None): _description_
                 parse_mode (Literal[&#39;HTML&#39;, &#39;Markdown&#39;, &#39;MarkdownV2&#39;]): Mode for parsing entities in the message text, Default MarkdownV2
                 disable_notification (bool): Sends the message silently. Users will receive a notification with no sound.
                 protect_content (bool): Protects the contents of the sent message from forwarding and saving.
@@ -106,5 +106,46 @@ class Bot:
                 r = await client.post(f"{endpoint}/deleteMessage", json=payload)
                 r_data = r.json()
                 return r_data
+
+        @staticmethod
+        async def sendVideo(
+            chat_id: int | str | None = None,
+            video: str | None = None,
+            caption: str | None = None,
+            parse_mode: Literal['HTML', 'Markdown', 'MarkdownV2'] = 'MarkdownV2',
+            has_spoiler: bool | None = None,
+            supports_streaming: bool | None = None,
+            disable_notification: bool | None = None,
+            protect_content: bool | None = None,
+            reply_message: str | None = None
+        ):
+            """Use this method to send video files, Telegram clients support MPEG4 videos 
+
+            Args:
+                chat_id (int | str): Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+                video (str): Video to send. Pass a file_id as String to send a video that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a video from the Internet, or upload a new video using multipart/form-data
+                caption (str): Video caption (may also be used when resending videos by file_id), 0-1024 characters after entities parsing
+                parse_mode (Literal[&#39;HTML&#39;, &#39;Markdown&#39;, &#39;MarkdownV2&#39;], optional): Mode for parsing entities in the video caption. Defaults to 'MarkdownV2'.
+                has_spoiler (bool): Pass True if the video needs to be covered with a spoiler animation
+                supports_streaming (bool): Pass True if the uploaded video is suitable for streaming
+                disable_notification (bool): Sends the message silently. Users will receive a notification with no sound.
+                protect_content (bool): Protects the contents of the sent message from forwarding and saving
+                reply_message (str): Reply Message? Defaults to None.
+            """
+            async with AsyncClient() as client:
+                with open(f"{video}", 'rb') as f:
+                    video_binary = {'video': f}
+                    payload = {
+                        'chat_id': chat_id,
+                        'caption': caption,
+                        'parse_mode': parse_mode,
+                        'supports_streaming': supports_streaming,
+                        'disable_notification': disable_notification,
+                        'protect_content': protect_content,
+                        'reply_to_message_id': reply_message
+                    }
+                    r = await client.post(f"{endpoint}/sendVideo", data=payload, files=video_binary)
+                    r_data = r.json()
+                    return r_data
 # create Istance bot
 bot = Bot()
