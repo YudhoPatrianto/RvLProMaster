@@ -11,7 +11,9 @@ class Configs:
         self.token = os.getenv("token")
         self.url = os.getenv("endpoint")
         self.endpoint = f"{self.url}{self.token}"
-    
+        self.gemini_api_key = os.getenv("gemini_api_key")
+        self.github_pat = os.getenv("github_pat")
+        
     def checkConfiguration(self):
         try:
             if os.path.isfile("RvLProMaster/config/.env"):
@@ -50,3 +52,5 @@ Config = Configs()
 # Pull Out Information
 endpoint = Config.endpoint
 token = Config.token
+gemini_api_key = Config.gemini_api_key
+github_pat = Config.github_pat
