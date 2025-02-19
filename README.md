@@ -28,7 +28,7 @@ python3 main.py
 from RvLProMaster import types, bot, RunBOT
 import asyncio
 
-@RunBOT
+@RunBOT(always_run=True) # Set True If You Want's Bot Always Run, But If You Set False BOT Only Run Just Once
 async def MyBots():
     while True: # Add This If Your Bot Still Want's Running
         if types.text == "/start":
