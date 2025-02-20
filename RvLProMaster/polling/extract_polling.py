@@ -66,18 +66,29 @@ def RunBOT(always_run: bool = True, save_polling: bool = False):
         @wraps(func)
         async def wrapped(*args, **kwargs):
             if always_run == True:
-                if save_polling == True: # Save Polling True (will saved polling)
-                    print(f"Detected Parameters always_run\nStatus: {always_run} (Always Running)\nRunning BOT")
+                if save_polling == True: # Save Polling 
+                    print(f"Detected Parameters always_run\nStatus: {always_run} (Always Running)\nSave Polling: {save_polling} (Saved Polling)\nRunning BOT")
                     while True:
                         await types.ExtractPolling(save_polling=True)
                         await asyncio.sleep(1)
                         await func(*args, **kwargs)
-                elif always_run == False:
-                    if save_polling == False: # Save Polling False (will not saved polling)
-                        print(f"Detected Parameters always_run\nStatus: {always_run} (Only Run Once)\nRunning BOT")
-                        await types.ExtractPolling(save_polling=False)
+                elif save_polling == False:
+                    print(f"Detected Parameters always_run\nStatus: {always_run} (Only Run Once)\nSave Polling: {save_polling} (Not Save Polling)\nRunning BOT")
+                    while True:
+                        await types.ExtractPolling(save_polling=False) # Not Save Polling
                         await asyncio.sleep(1)
                         await func(*args, **kwargs)
+            elif always_run == False:
+                if save_polling == True:
+                    print(f"Detected Parameters always_run\nStatus: {always_run} (Always Running)\nSave Polling: {save_polling} (Saved Polling)\nRunning BOT")
+                    await types.ExtractPolling(save_polling=True) # Save Polling 
+                    await asyncio.sleep(1)
+                    await func(*args, **kwargs)
+                elif save_polling == False:
+                    print(f"Detected Parameters always_run\nStatus: {always_run} (Only Run Once)\nSave Polling: {save_polling} (Not Save Polling)\nRunning BOT")
+                    await types.ExtractPolling(save_polling=False) # Not Save Polling
+                    await asyncio.sleep(1)
+                    await func(*args, **kwargs)
             else:
                 print(f"Please Spesify always_run parameter\nIf Set To True BOT Will Receive The Latest Polls Continuously (Real Time) And Send Any Response Method Only Once\nIf Set To False BOT Will Receive Latest Poll Once And Send Any Response Method Only Once Then Bot Will Stop")
         return wrapped
