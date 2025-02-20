@@ -13,7 +13,7 @@ class Bot:
             async with AsyncClient() as client:
                 payload = {
                     'offset': offset,
-                    'timeout': 20
+                    'timeout': 10
                 }
                 r = await client.get(f"{endpoint}/getUpdates", params=payload)
                 r_data = r.json()
