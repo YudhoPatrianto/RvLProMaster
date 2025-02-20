@@ -28,7 +28,7 @@ class telegram_types:
             with open('channel.json', 'w') as f:
                 f.write(dumps(out_polling, indent=2))
 
-    async def RunBOT(self, save_polling: bool = False):
+    async def ExtractPolling(self, save_polling: bool = False):
         while True:
             try:
                 out_polling = await polling()
@@ -68,12 +68,12 @@ def RunBOT(always_run: bool = True):
             if always_run == True:
                 print(f"Detected Parameters always_run\nStatus: {always_run} (Always Running)\nRunning BOT")
                 while True:
-                    await types.RunBOT()
+                    await types.ExtractPolling()
                     await asyncio.sleep(1)
                     await func(*args, **kwargs)
             elif always_run == False:
                 print(f"Detected Parameters always_run\nStatus: {always_run} (Only Run Once)\nRunning BOT")
-                await types.RunBOT()
+                await types.ExtractPolling()
                 await asyncio.sleep(1)
                 await func(*args, **kwargs)
             else:
