@@ -19,6 +19,12 @@ class telegram_types:
         self.username = ''
         self.user_id = ''
         
+        # chat_join_request Information
+        self.first_name_request = ''
+        self.last_name_request = ''
+        self.username_request = ''
+        self.user_id_request = ''
+        
     # Save Polling 
     def savePolling(self, out_polling):
         if 'message' in out_polling:
@@ -55,6 +61,11 @@ class telegram_types:
                         self.savePolling(out_polling)
                     else:
                         pass
+                elif 'chat_join_request' in out_polling:
+                    self.first_name_request = out_polling["chat_join_request"]["from"].get('first_name','')
+                    self.last_name_request = out_polling["chat_join_request"]["from"].get('last_name','')
+                    self.username_request = out_polling["chat_join_request"]["from"].get('username','')
+                    self.user_id_request = out_polling["chat_join_request"]["from"].get('id','')
                 return self
             except:
                 pass
