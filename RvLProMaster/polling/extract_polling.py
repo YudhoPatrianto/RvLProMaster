@@ -28,6 +28,12 @@ class telegram_types:
         self.username_request = ''
         self.user_id_request = ''
         
+        # new_chat_member
+        self.first_name_joined = ''
+        self.last_name_joined = ''
+        self.username_joined = ''
+        self.user_id_joined = ''
+        
     # Save Polling 
     def savePolling(self, out_polling):
         if 'message' in out_polling:
@@ -70,16 +76,27 @@ class telegram_types:
                     self.last_name_request = out_polling["chat_join_request"]["from"].get('last_name','')
                     self.username_request = out_polling["chat_join_request"]["from"].get('username','')
                     self.user_id_request = out_polling["chat_join_request"]["from"].get('id','')
+                    
+                # new_chat_member
+                if 'message' in out_polling:
+                    if 'new_chat_member' in out_polling['message']:
+                        self.event_field = 'new_chat_member'
+                        self.first_name_joined = out_polling['message']['new_chat_member'].get('first_name','')
+                        self.last_name_joined = out_polling['message']['new_chat_member'].get('last_name','')
+                        self.username_joined = out_polling['message']['new_chat_member'].get('username','')
+                        self.user_id_joined = out_polling['message']['new_chat_member'].get('id','')
                 return self
             except:
                 pass
 
     # Event Fields Watcher
     def EventWatcher(self,
-        field_list: Literal['UserRequest'] | None = None
+        field_list: Literal['UserRequest', 'UserJoined'] | None = None
     ):
         if self.event_field == 'chat_join_request' and field_list == 'UserRequest':
             return str('UserRequest')
+        elif self.event_field == 'new_chat_member' and field_list == 'UserJoined':
+            return str('UserJoined')
         
 
 types = telegram_types()
