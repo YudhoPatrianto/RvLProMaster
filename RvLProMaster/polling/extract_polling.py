@@ -9,6 +9,9 @@ class telegram_types:
         self.resetValues()
     
     def resetValues(self):
+        # Event Field
+        self.event_field = ''
+        
         self.chat_id = ''
         self.text = ''
         self.reply_message = ''
@@ -62,6 +65,7 @@ class telegram_types:
                     else:
                         pass
                 elif 'chat_join_request' in out_polling:
+                    self.event_field = 'chat_join_request'
                     self.first_name_request = out_polling["chat_join_request"]["from"].get('first_name','')
                     self.last_name_request = out_polling["chat_join_request"]["from"].get('last_name','')
                     self.username_request = out_polling["chat_join_request"]["from"].get('username','')
@@ -69,6 +73,14 @@ class telegram_types:
                 return self
             except:
                 pass
+
+    # Event Fields Watcher
+    def EventWatcher(self,
+        field_list: Literal['UserRequest'] | None = None
+    ):
+        if self.event_field == 'chat_join_request' and field_list == 'UserRequest':
+            return str('UserRequest')
+        
 
 types = telegram_types()
 
