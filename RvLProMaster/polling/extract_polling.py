@@ -78,6 +78,7 @@ class telegram_types:
                         pass
                 elif 'chat_join_request' in out_polling:
                     self.event_field = 'chat_join_request'
+                    self.chat_id = out_polling["chat_join_request"]['chat'].get('id', '')
                     self.first_name_request = out_polling["chat_join_request"]["from"].get('first_name','')
                     self.last_name_request = out_polling["chat_join_request"]["from"].get('last_name','')
                     self.username_request = out_polling["chat_join_request"]["from"].get('username','')
