@@ -34,6 +34,12 @@ class telegram_types:
         self.username_joined = ''
         self.user_id_joined = ''
         
+        # left_chat_member
+        self.first_name_left = ''
+        self.last_name_left = ''
+        self.username_left = ''
+        self.user_id_left = ''
+        
     # Save Polling 
     def savePolling(self, out_polling):
         if 'message' in out_polling:
@@ -85,18 +91,28 @@ class telegram_types:
                         self.last_name_joined = out_polling['message']['new_chat_member'].get('last_name','')
                         self.username_joined = out_polling['message']['new_chat_member'].get('username','')
                         self.user_id_joined = out_polling['message']['new_chat_member'].get('id','')
+                    
+                    # left_chat_member
+                    if 'left_chat_member' in out_polling['message']:
+                        self.event_field = 'left_chat_member'
+                        self.first_name_left = out_polling['message']['left_chat_member'].get('first_name','')
+                        self.last_name_left = out_polling['message']['left_chat_member'].get('last_name','')
+                        self.username_left = out_polling['message']['left_chat_member'].get('username','')
+                        self.user_id_left = out_polling['message']['left_chat_member'].get('id','')
                 return self
             except:
                 pass
 
     # Event Fields Watcher
     def EventWatcher(self,
-        field_list: Literal['UserRequest', 'UserJoined'] | None = None
+        field_list: Literal['UserRequest', 'UserJoined', 'UserLeft'] | None = None
     ):
         if self.event_field == 'chat_join_request' and field_list == 'UserRequest':
             return str('UserRequest')
         elif self.event_field == 'new_chat_member' and field_list == 'UserJoined':
             return str('UserJoined')
+        elif self.event_field == 'left_chat_member' and field_list == 'UserLeft':
+            return str('UserLeft')
         
 
 types = telegram_types()
