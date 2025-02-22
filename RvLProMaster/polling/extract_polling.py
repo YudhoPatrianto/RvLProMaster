@@ -88,6 +88,7 @@ class telegram_types:
                 if 'message' in out_polling:
                     if 'new_chat_member' in out_polling['message']:
                         self.event_field = 'new_chat_member'
+                        self.chat_id = out_polling['message']['chat'].get('id','')
                         self.first_name_joined = out_polling['message']['new_chat_member'].get('first_name','')
                         self.last_name_joined = out_polling['message']['new_chat_member'].get('last_name','')
                         self.username_joined = out_polling['message']['new_chat_member'].get('username','')
