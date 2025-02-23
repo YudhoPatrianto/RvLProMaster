@@ -97,6 +97,7 @@ class telegram_types:
                     # left_chat_member
                     if 'left_chat_member' in out_polling['message']:
                         self.event_field = 'left_chat_member'
+                        self.chat_id = out_polling['message']['chat'].get('id','')
                         self.first_name_left = out_polling['message']['left_chat_member'].get('first_name','')
                         self.last_name_left = out_polling['message']['left_chat_member'].get('last_name','')
                         self.username_left = out_polling['message']['left_chat_member'].get('username','')
