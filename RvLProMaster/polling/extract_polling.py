@@ -105,18 +105,22 @@ class telegram_types:
                 return self
             except:
                 pass
-
     # Event Fields Watcher
     def EventWatcher(self,
         field_list: Literal['UserRequest', 'UserJoined', 'UserLeft'] | None = None
     ):
-        if self.event_field == 'chat_join_request' and field_list == 'UserRequest':
-            return str('UserRequest')
-        elif self.event_field == 'new_chat_member' and field_list == 'UserJoined':
-            return str('UserJoined')
-        elif self.event_field == 'left_chat_member' and field_list == 'UserLeft':
-            return str('UserLeft')
-        
+        if field_list == 'UserRequest':
+            if self.event_field == 'chat_join_request':
+                self.event_field = ''
+                return 'UserRequest'
+        elif field_list == 'UserJoined':
+            if self.event_field == 'new_chat_member':
+                self.event_field = ''
+                return 'UserJoined'
+        elif field_list == 'UserLeft':
+            if self.event_field == 'left_chat_member':
+                self.event_field = ''
+                return 'UserLeft'
 
 types = telegram_types()
 
