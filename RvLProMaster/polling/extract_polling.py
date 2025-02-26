@@ -47,9 +47,7 @@ class telegram_types:
     async def ExtractPolling(self, save_polling: bool = False):
         while True:
             try:
-                out_polling = await polling()
-                msg_polling = out_polling['message']
-
+                out_polling = await polling()                
                 # Group
                 if 'message' in out_polling:
                     self.chat_id = out_polling['message']['chat'].get('id','')
@@ -62,32 +60,21 @@ class telegram_types:
                     self.username = out_polling['message']['from'].get('username','')
                     self.user_id = out_polling['message']['from'].get('id','')
                     
-                    # Save Polling
-                    if save_polling == True:
-                        self.savePolling(out_polling)
-                    else:
-                        pass
-                elif 'channel_post' in out_polling:
-                    # Save Polling
-                    if save_polling == True:
-                        self.savePolling(out_polling)
-                    else:
-                        pass
+                    # new_chat_participant (UserJoined)
+                    if 'new_chat_participant' in out_polling['message']:
+                        self.event_field = 'new_chat_participant'
+                        self.first_name_joined = out_polling['message']['new_chat_participant'].get('first_name','')
+                        self.last_name_joined = out_polling['message']['new_chat_participant'].get('last_name','')
+                        self.username_joined = out_polling['message']['new_chat_participant'].get('username','')
+                        self.user_id_joined = out_polling['message']['new_chat_participant'].get('id','')
                     
-                # new_chat_participant
-                if 'new_chat_participant' in msg_polling:
-                    self.event_field = 'new_chat_participant'
-                    self.first_name_joined = msg_polling["new_chat_participant"].get('first_name','')
-                    self.last_name_joined = msg_polling["new_chat_participant"].get('last_name','')
-                    self.username_joined = msg_polling["new_chat_participant"].get('username','')
-                    self.user_id_joined = msg_polling["new_chat_participant"].get('id','')
-                    
-                elif 'left_chat_participant' in msg_polling:
-                    self.event_field = 'left_chat_participant'
-                    self.first_name_left = msg_polling["left_chat_participant"].get('first_name','')
-                    self.last_name_left = msg_polling["left_chat_participant"].get('last_name','')
-                    self.username_left = msg_polling["left_chat_participant"].get('username','')
-                    self.user_id_left = msg_polling["left_chat_participant"].get('id','')
+                    # left_chat_member (UserLeft)
+                    elif 'left_chat_participant' in out_polling['message']:
+                        self.event_field = 'left_chat_participant'
+                        self.first_name_left = out_polling['message']['left_chat_participant'].get('first_name','')
+                        self.last_name_left = out_polling['message']['left_chat_participant'].get('last_name','')
+                        self.username_left = out_polling['message']['left_chat_participant'].get('username','')
+                        self.user_id_left = out_polling['message']['left_chat_participant'].get('id','')
                 return self
             except:
                 pass
