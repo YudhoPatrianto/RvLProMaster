@@ -90,11 +90,20 @@ class telegram_types:
                     self.last_name_request = out_polling['chat_join_request']['from'].get('last_name','')
                     self.username_request = out_polling['chat_join_request']['from'].get('username','')
                     self.user_id_request = out_polling['chat_join_request']['from'].get('id','')
+                
+                # Channel
+                elif 'channel_post' in out_polling:
+                    self.event_field = 'channel_post'
+                    
+                    # Channel Information
+                    self.text = out_polling['channel_post'].get('text','')
+                    self.chat_id = out_polling['channel_post']['chat'].get('id','')
+                    self.reply_message = out_polling['channel_post'].get('message_id', '')
                 return self
             except:
                 pass
             
-    def EventWatcher(self, EventSelector: Literal['UserRequest', 'UserJoined', 'UserLeft']) -> bool:
+    def EventWatcher(self, EventSelector: Literal['UserRequest', 'UserJoined', 'UserLeft', 'Channel']) -> bool:
         # User Request To Join
         if EventSelector == "UserRequest" and self.event_field == 'chat_join_request':
             self.event_field = ''
@@ -105,6 +114,10 @@ class telegram_types:
             return True
         # User Left
         elif EventSelector == "UserLeft" and self.event_field == 'left_chat_participant':
+            self.event_field = ''
+            return True
+        # Channel
+        elif EventSelector == "Channel" and self.event_field == 'channel_post':
             self.event_field = ''
             return True
         return False
