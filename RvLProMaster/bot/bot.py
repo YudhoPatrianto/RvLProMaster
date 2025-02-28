@@ -147,5 +147,20 @@ class Bot:
                     r = await client.post(f"{endpoint}/sendVideo", data=payload, files=video_binary)
                     r_data = r.json()
                     return r_data
+                
+        # approveChatJoinRequest
+        @staticmethod
+        async def approveChatJoinRequest(
+            chat_id: int | str | None = None,
+            user_id: int | str | None = None
+        ):
+            async with AsyncClient() as client:
+                payload = {
+                    'chat_id': chat_id,
+                    'user_id': user_id
+                }
+                r = await client.post(f"{endpoint}/approveChatJoinRequest", json=payload)
+                r_data = r.json()
+                return r_data
 # create Istance bot
 bot = Bot()
