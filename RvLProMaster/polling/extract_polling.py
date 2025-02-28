@@ -75,21 +75,33 @@ class telegram_types:
                         self.last_name_left = out_polling['message']['left_chat_participant'].get('last_name','')
                         self.username_left = out_polling['message']['left_chat_participant'].get('username','')
                         self.user_id_left = out_polling['message']['left_chat_participant'].get('id','')
+                        
+                elif 'chat_join_request' in out_polling:
+                    self.event_field = 'chat_join_request'
                 return self
             except:
                 pass
             
-    def EventWatcher(self, event_status: Literal['UserJoined', 'UserLeft']) -> bool:
-        if event_status == 'UserJoined':
-            if self.event_field == 'new_chat_participant':
-                self.event_field = ''
+    def EventWatcher(self, EventSelector: Literal['UserRequest', 'UserJoined', 'UserLeft']) -> bool:
+        # User Request To Join
+        if self.event_field == "chat_join_request":
+            self.event_field =  None
+            if EventSelector == 'UserRequest':
+                self.event_field = None
                 return True
-        elif event_status == 'UserLeft':
-            if self.event_field == 'left_chat_participant':
-                self.event_field = '' 
+        # User Joined Into Chat
+        if self.event_field == "new_chat_participant":
+            self.event_field =  None
+            if EventSelector == 'UserJoined':
+                self.event_field = None
+                return True
+        # User Joined Into Chat
+        if self.event_field == "left_chat_participant":
+            self.event_field =  None
+            if EventSelector == 'UserLeft':
+                self.event_field = None
                 return True
         return False
-            
 
 types = telegram_types()
 
