@@ -96,23 +96,17 @@ class telegram_types:
             
     def EventWatcher(self, EventSelector: Literal['UserRequest', 'UserJoined', 'UserLeft']) -> bool:
         # User Request To Join
-        if self.event_field == "chat_join_request":
-            self.event_field =  None
-            if EventSelector == 'UserRequest':
-                self.event_field = None
-                return True
-        # User Joined Into Chat
-        if self.event_field == "new_chat_participant":
-            self.event_field =  None
-            if EventSelector == 'UserJoined':
-                self.event_field = None
-                return True
-        # User Joined Into Chat
-        if self.event_field == "left_chat_participant":
-            self.event_field =  None
-            if EventSelector == 'UserLeft':
-                self.event_field = None
-                return True
+        if EventSelector == "UserRequest" and self.event_field == 'chat_join_request':
+            self.event_field = ''
+            return True
+        # User Joined 
+        elif EventSelector == "UserJoined" and self.event_field == 'new_chat_participant':
+            self.event_field = ''
+            return True
+        # User Left
+        elif EventSelector == "UserLeft" and self.event_field == 'left_chat_participant':
+            self.event_field = ''
+            return True
         return False
 
 types = telegram_types()
