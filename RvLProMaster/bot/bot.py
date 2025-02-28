@@ -142,6 +142,7 @@ class Bot:
                         'supports_streaming': supports_streaming,
                         'disable_notification': disable_notification,
                         'protect_content': protect_content,
+                        'has_spoiler': has_spoiler,
                         'reply_to_message_id': reply_message
                     }
                     r = await client.post(f"{endpoint}/sendVideo", data=payload, files=video_binary)
