@@ -41,6 +41,10 @@ class telegram_types:
         self.username_request = ''
         self.user_id_request = ''
         
+        # Inline Keyboard/Buttons
+        self.callback_data = ''
+        self.message_id = ''
+        
     # Save Polling 
     def savePolling(self, out_polling):
         if 'message' in out_polling:
@@ -99,6 +103,12 @@ class telegram_types:
                     self.text = out_polling['channel_post'].get('text','')
                     self.chat_id = out_polling['channel_post']['chat'].get('id','')
                     self.reply_message = out_polling['channel_post'].get('message_id', '')
+                    
+                # reply_markup (Inline Keyboard/Buttons)
+                elif 'callback_query' in out_polling:
+                    self.callback_data = out_polling["callback_query"].get('data', '')
+                    self.message_id = out_polling["callback_query"]["message"].get('message_id', '')
+
                 return self
             except:
                 pass

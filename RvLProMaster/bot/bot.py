@@ -29,6 +29,7 @@ class Bot:
             parse_mode: Literal['HTML', 'Markdown', 'MarkdownV2'] = 'MarkdownV2',
             disable_notification: bool | None = None,
             protect_content: bool | None = None,
+            reply_markup: str | None = None,
             reply_message: int | str | None = None,
         ):
             """Use this method to send text messages
@@ -47,6 +48,7 @@ class Bot:
                 'parse_mode': parse_mode,
                 'disable_notification': disable_notification,
                 'protect_content': protect_content,
+                'reply_markup': reply_markup,
                 'reply_to_message_id': reply_message
             }
             async  with AsyncClient() as client:
