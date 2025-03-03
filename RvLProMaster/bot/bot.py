@@ -180,5 +180,35 @@ class Bot:
                 r = await client.post(f"{endpoint}/declineChatJoinRequest", json=payload)
                 r_data = r.json()
                 return r_data
+            
+        # sendPhoto
+        @staticmethod
+        async def sendPhoto(
+            chat_id: int | str | None = None,
+            photo: str | None = None,
+            caption: str | None = None,
+            parse_mode: Literal['HTML', 'Markdown', 'MarkdownV2'] = 'MarkdownV2',
+            has_spoiler: bool | None = None,
+            disable_notification: bool | None = None,
+            protect_content: bool | None = None,
+            reply_markup: str | None = None,
+            reply_message: str | None = None
+        ):
+            async with AsyncClient() as client:
+                with open(f"{photo}", 'rb') as f:
+                    photo_binary = {'photo': f}
+                    payload = {
+                        'chat_id': chat_id,
+                        'caption': caption,
+                        'parse_mode': parse_mode,
+                        'disable_notification': disable_notification,
+                        'protect_content': protect_content,
+                        'has_spoiler': has_spoiler,
+                        'reply_markup': reply_markup,
+                        'reply_to_message_id': reply_message
+                    }
+                    r = await client.post(f"{endpoint}/sendPhoto", data=payload, files=photo_binary)
+                    r_data = r.json()
+                    return r_data
 # create Istance bot
 bot = Bot()
