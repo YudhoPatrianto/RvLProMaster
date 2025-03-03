@@ -127,7 +127,7 @@ class Bot:
                 chat_id (int | str): Unique identifier for the target chat or username of the target channel (in the format @channelusername)
                 video (str): Video to send. Pass a file_id as String to send a video that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a video from the Internet, or upload a new video using multipart/form-data
                 caption (str): Video caption (may also be used when resending videos by file_id), 0-1024 characters after entities parsing
-                parse_mode (Literal[&#39;HTML&#39;, &#39;Markdown&#39;, &#39;MarkdownV2&#39;], optional): Mode for parsing entities in the video caption. Defaults to 'MarkdownV2'.
+                parse_mode (Literal[&#39;HTML&#39;, &#39;Markdown&#39;, &#39;MarkdownV2&#39;]): Mode for parsing entities in the video caption. Defaults to 'MarkdownV2'.
                 has_spoiler (bool): Pass True if the video needs to be covered with a spoiler animation
                 supports_streaming (bool): Pass True if the uploaded video is suitable for streaming
                 disable_notification (bool): Sends the message silently. Users will receive a notification with no sound.
@@ -192,11 +192,42 @@ class Bot:
             disable_notification: bool | None = None,
             protect_content: bool | None = None,
             reply_markup: str | None = None,
-            reply_message: str | None = None
+            reply_message: int | str | None = None
         ):
+            """Use this method to send photos
+
+            Args:
+                chat_id (int | str): Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+                photo (str | None): Photo to send. Pass a file_id as String to send a photo that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a photo from the Internet, or upload a new photo using multipart/form-data. The photo must be at most 10 MB in size. The photo's width and height must not exceed 10000 in total. Width and height ratio must be at most 20.
+                caption (str | None): Photo caption (may also be used when resending photos by file_id), 0-1024 characters after entities parsing
+                parse_mode (Literal[&#39;HTML&#39;, &#39;Markdown&#39;, &#39;MarkdownV2&#39;]): Mode for parsing entities in the photo caption Defaults to 'MarkdownV2'.
+                has_spoiler (bool | None): Pass True if the photo needs to be covered with a spoiler animation
+                disable_notification (bool | None): Sends the message silently. Users will receive a notification with no sound.
+                protect_content (bool | None): Protects the contents of the sent message from forwarding and saving
+                reply_markup (str | None): Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user
+                reply_message (int | str | None): Reply Message?. Defaults to No.
+
+            Returns:
+                _type_: _description_
+            """
             async with AsyncClient() as client:
-                with open(f"{photo}", 'rb') as f:
-                    photo_binary = {'photo': f}
+                # Photo With Links
+                if str(photo).startswith('https://') or str(photo).startswith('http://'):
+                    payload = {
+                        'chat_id': chat_id,
+                        'photo': photo,
+                        'caption': caption,
+                        'parse_mode': parse_mode,
+                        'disable_notification': disable_notification,
+                        'protect_content': protect_content,
+                        'reply_markup': reply_markup,
+                        'reply_to_message_id': reply_message
+                    }
+                    r = await client.post(f"{endpoint}/sendPhoto", data=payload)
+                    r_data = r.json()
+                    return r_data
+                # Photo With File
+                else:
                     payload = {
                         'chat_id': chat_id,
                         'caption': caption,
@@ -204,11 +235,12 @@ class Bot:
                         'disable_notification': disable_notification,
                         'protect_content': protect_content,
                         'has_spoiler': has_spoiler,
-                        'reply_markup': reply_markup,
                         'reply_to_message_id': reply_message
                     }
-                    r = await client.post(f"{endpoint}/sendPhoto", data=payload, files=photo_binary)
-                    r_data = r.json()
-                    return r_data
+                    with open(f'{photo}', 'rb') as read_img:
+                        photo_binary = {'photo': read_img}
+                        r = await client.post(f"{endpoint}/sendPhoto", data=payload, files=photo_binary)
+                        r_data = r.json()
+                        return r_data
 # create Istance bot
 bot = Bot()
