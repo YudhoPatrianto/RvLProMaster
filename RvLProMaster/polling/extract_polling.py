@@ -110,9 +110,8 @@ class telegram_types:
                     
                 # reply_markup (Inline Keyboard/Buttons)
                 elif 'callback_query' in out_polling:
-                    self.callback_data = out_polling["callback_query"].get('data', '')
-                    self.message_id = out_polling["callback_query"]["message"].get('message_id', '')
-
+                    self.callback_data = out_polling["callback_query"].get("data","")
+                    self.message_id = out_polling["callback_query"]["message"].get("message_id", "")
                 return self
             except:
                 pass
