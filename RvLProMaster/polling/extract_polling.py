@@ -45,6 +45,10 @@ class telegram_types:
         self.callback_data = ''
         self.message_id = ''
 
+        # Channel Information
+        self.channel_text = ''
+        self.channel_chat_id = ''
+        self.channel_reply_message = ''
     # Save Polling 
     def savePolling(self, out_polling):
         if 'message' in out_polling:
@@ -100,9 +104,9 @@ class telegram_types:
                     self.event_field = 'channel_post'
                     
                     # Channel Information
-                    self.text = out_polling['channel_post'].get('text','')
-                    self.chat_id = out_polling['channel_post']['chat'].get('id','')
-                    self.reply_message = out_polling['channel_post'].get('message_id', '')
+                    self.channel_text = out_polling['channel_post'].get('text','')
+                    self.channel_chat_id = out_polling['channel_post']['chat'].get('id','')
+                    self.channel_reply_message = out_polling['channel_post'].get('message_id', '')
                     
                 # reply_markup (Inline Keyboard/Buttons)
                 elif 'callback_query' in out_polling:
