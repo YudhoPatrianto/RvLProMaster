@@ -16,6 +16,7 @@ class telegram_types:
         self.chat_id = ''
         self.text = ''
         self.reply_message = ''
+        self.group_title = ''
         
         # User Information
         self.first_name = ''
@@ -28,18 +29,21 @@ class telegram_types:
         self.last_name_joined = ''
         self.username_joined = ''
         self.user_id_joined = ''
+        self.group_title_joined = ''
         
         # left_chat_member
         self.first_name_left = ''
         self.last_name_left = ''
         self.username_left = ''
         self.user_id_left = ''
+        self.group_title_left = ''
         
         # chat_join_request
         self.first_name_request = ''
         self.last_name_request = ''
         self.username_request = ''
         self.user_id_request = ''
+        self.group_title_request = ''
         
         # Inline Keyboard/Buttons
         self.callback_data = ''
@@ -49,6 +53,8 @@ class telegram_types:
         self.channel_text = ''
         self.channel_chat_id = ''
         self.channel_reply_message = ''
+        self.channel_title = ''
+        
     # Save Polling 
     def savePolling(self, out_polling):
         if 'message' in out_polling:
@@ -64,9 +70,11 @@ class telegram_types:
                 out_polling = await polling()                
                 # Group
                 if 'message' in out_polling:
+                    # Group Information
                     self.chat_id = out_polling['message']['chat'].get('id','')
                     self.text = out_polling['message'].get('text','')
                     self.reply_message = out_polling['message'].get('message_id', '')
+                    self.group_title = out_polling["message"]["chat"].get("title", "")
                     
                     # User Information
                     self.first_name = out_polling['message']['from'].get('first_name','')
@@ -81,6 +89,7 @@ class telegram_types:
                         self.last_name_joined = out_polling['message']['new_chat_participant'].get('last_name','')
                         self.username_joined = out_polling['message']['new_chat_participant'].get('username','')
                         self.user_id_joined = out_polling['message']['new_chat_participant'].get('id','')
+                        self.group_title_joined = out_polling["message"]["chat"].get("title", "")
                     
                     # left_chat_member (UserLeft)
                     elif 'left_chat_participant' in out_polling['message']:
@@ -89,6 +98,7 @@ class telegram_types:
                         self.last_name_left = out_polling['message']['left_chat_participant'].get('last_name','')
                         self.username_left = out_polling['message']['left_chat_participant'].get('username','')
                         self.user_id_left = out_polling['message']['left_chat_participant'].get('id','')
+                        self.group_title_left = out_polling["message"]["chat"].get("title", "")
                         
                 elif 'chat_join_request' in out_polling:
                     self.event_field = 'chat_join_request'
@@ -98,6 +108,7 @@ class telegram_types:
                     self.last_name_request = out_polling['chat_join_request']['from'].get('last_name','')
                     self.username_request = out_polling['chat_join_request']['from'].get('username','')
                     self.user_id_request = out_polling['chat_join_request']['from'].get('id','')
+                    self.group_title_request = out_polling["chat_join_request"]["chat"].get("title", "")
                 
                 # Channel
                 elif 'channel_post' in out_polling:
@@ -107,11 +118,13 @@ class telegram_types:
                     self.channel_text = out_polling['channel_post'].get('text','')
                     self.channel_chat_id = out_polling['channel_post']['chat'].get('id','')
                     self.channel_reply_message = out_polling['channel_post'].get('message_id', '')
+                    self.channel_title = out_polling["channel_post"]["chat"].get("title", "")
                     
                 # reply_markup (Inline Keyboard/Buttons)
                 elif 'callback_query' in out_polling:
                     self.callback_data = out_polling["callback_query"].get("data","")
                     self.message_id = out_polling["callback_query"]["message"].get("message_id", "")
+                    self.channel_title = out_polling["callback_query"]["message"]["chat"].get("title", "")
                 return self
             except:
                 pass
