@@ -44,7 +44,7 @@ class telegram_types:
         # Inline Keyboard/Buttons
         self.callback_data = ''
         self.message_id = ''
-        
+
     # Save Polling 
     def savePolling(self, out_polling):
         if 'message' in out_polling:
@@ -114,21 +114,26 @@ class telegram_types:
                 pass
             
     def EventWatcher(self, EventSelector: Literal['UserRequest', 'UserJoined', 'UserLeft', 'Channel']) -> bool:
+        self.text = ''
         # User Request To Join
         if EventSelector == "UserRequest" and self.event_field == 'chat_join_request':
             self.event_field = ''
+            self.text = ''
             return True
         # User Joined 
         elif EventSelector == "UserJoined" and self.event_field == 'new_chat_participant':
             self.event_field = ''
+            self.text = ''
             return True
         # User Left
         elif EventSelector == "UserLeft" and self.event_field == 'left_chat_participant':
             self.event_field = ''
+            self.text = ''
             return True
         # Channel
         elif EventSelector == "Channel" and self.event_field == 'channel_post':
             self.event_field = ''
+            self.text = ''
             return True
         return False
 
