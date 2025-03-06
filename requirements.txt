@@ -1,0 +1,8 @@
+httpx
+asyncio
+python-dotenv
+openai
+google-genai
+yt-dlp
+markdown
+telegraph

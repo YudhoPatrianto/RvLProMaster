@@ -1,0 +1,193 @@
+import json
+from .polling import polling
+from json import dumps
+from typing import Optional, Literal
+from functools import wraps
+import asyncio
+
+class telegram_types:
+    def __init__(self):
+        self.resetValues()
+    
+    def resetValues(self):
+        # Event Field
+        self.event_field = ''
+
+        # Message Information
+        self.chat_id = ''
+        self.text = ''
+        self.reply_message = ''
+        self.group_title = ''
+        
+        # User Information
+        self.first_name = ''
+        self.last_name = ''
+        self.username = ''
+        self.user_id = ''
+        
+        # new_chat_participant
+        self.first_name_joined = ''
+        self.last_name_joined = ''
+        self.username_joined = ''
+        self.user_id_joined = ''
+        self.group_title_joined = ''
+        
+        # left_chat_member
+        self.first_name_left = ''
+        self.last_name_left = ''
+        self.username_left = ''
+        self.user_id_left = ''
+        self.group_title_left = ''
+        
+        # chat_join_request
+        self.first_name_request = ''
+        self.last_name_request = ''
+        self.username_request = ''
+        self.user_id_request = ''
+        self.group_title_request = ''
+        
+        # Inline Keyboard/Buttons
+        self.callback_data = ''
+        self.message_id = ''
+
+        # Channel Information
+        self.channel_text = ''
+        self.channel_chat_id = ''
+        self.channel_reply_message = ''
+        self.channel_title = ''
+        
+    # Save Polling 
+    def savePolling(self, out_polling):
+        if 'message' in out_polling:
+            with open('message.json', 'w') as f:
+                f.write(dumps(out_polling, indent=2))
+        elif 'channel_post' in out_polling:
+            with open('channel.json', 'w') as f:
+                f.write(dumps(out_polling, indent=2))
+
+    async def ExtractPolling(self, save_polling: bool = False):
+        while True:
+            try:
+                out_polling = await polling()                
+                # Group
+                if 'message' in out_polling:
+                    # Group Information
+                    self.chat_id = out_polling['message']['chat'].get('id','')
+                    self.text = out_polling['message'].get('text','')
+                    self.reply_message = out_polling['message'].get('message_id', '')
+                    self.group_title = out_polling["message"]["chat"].get("title", "")
+                    
+                    # User Information
+                    self.first_name = out_polling['message']['from'].get('first_name','')
+                    self.last_name = out_polling['message']['from'].get('last_name','')
+                    self.username = out_polling['message']['from'].get('username','')
+                    self.user_id = out_polling['message']['from'].get('id','')
+                    
+                    # new_chat_participant (UserJoined)
+                    if 'new_chat_participant' in out_polling['message']:
+                        self.event_field = 'new_chat_participant'
+                        self.first_name_joined = out_polling['message']['new_chat_participant'].get('first_name','')
+                        self.last_name_joined = out_polling['message']['new_chat_participant'].get('last_name','')
+                        self.username_joined = out_polling['message']['new_chat_participant'].get('username','')
+                        self.user_id_joined = out_polling['message']['new_chat_participant'].get('id','')
+                        self.group_title_joined = out_polling["message"]["chat"].get("title", "")
+                    
+                    # left_chat_member (UserLeft)
+                    elif 'left_chat_participant' in out_polling['message']:
+                        self.event_field = 'left_chat_participant'
+                        self.first_name_left = out_polling['message']['left_chat_participant'].get('first_name','')
+                        self.last_name_left = out_polling['message']['left_chat_participant'].get('last_name','')
+                        self.username_left = out_polling['message']['left_chat_participant'].get('username','')
+                        self.user_id_left = out_polling['message']['left_chat_participant'].get('id','')
+                        self.group_title_left = out_polling["message"]["chat"].get("title", "")
+                        
+                elif 'chat_join_request' in out_polling:
+                    self.event_field = 'chat_join_request'
+                    
+                    # User Information
+                    self.first_name_request = out_polling['chat_join_request']['from'].get('first_name','')
+                    self.last_name_request = out_polling['chat_join_request']['from'].get('last_name','')
+                    self.username_request = out_polling['chat_join_request']['from'].get('username','')
+                    self.user_id_request = out_polling['chat_join_request']['from'].get('id','')
+                    self.group_title_request = out_polling["chat_join_request"]["chat"].get("title", "")
+                
+                # Channel
+                elif 'channel_post' in out_polling:
+                    self.event_field = 'channel_post'
+                    
+                    # Channel Information
+                    self.channel_text = out_polling['channel_post'].get('text','')
+                    self.channel_chat_id = out_polling['channel_post']['chat'].get('id','')
+                    self.channel_reply_message = out_polling['channel_post'].get('message_id', '')
+                    self.channel_title = out_polling["channel_post"]["chat"].get("title", "")
+                    
+                # reply_markup (Inline Keyboard/Buttons)
+                elif 'callback_query' in out_polling:
+                    self.callback_data = out_polling["callback_query"].get("data","")
+                    self.message_id = out_polling["callback_query"]["message"].get("message_id", "")
+                    self.channel_title = out_polling["callback_query"]["message"]["chat"].get("title", "")
+                    
+                with open(f"event.json", 'w') as w:
+                    w.write(json.dumps(out_polling, indent=2))
+                return self
+            except:
+                pass
+            
+    def EventWatcher(self, EventSelector: Literal['UserRequest', 'UserJoined', 'UserLeft', 'Channel']) -> bool:
+        self.text = ''
+        # User Request To Join
+        if EventSelector == "UserRequest" and self.event_field == 'chat_join_request':
+            self.event_field = ''
+            self.text = ''
+            return True
+        # User Joined 
+        elif EventSelector == "UserJoined" and self.event_field == 'new_chat_participant':
+            self.event_field = ''
+            self.text = ''
+            return True
+        # User Left
+        elif EventSelector == "UserLeft" and self.event_field == 'left_chat_participant':
+            self.event_field = ''
+            self.text = ''
+            return True
+        # Channel
+        elif EventSelector == "Channel" and self.event_field == 'channel_post':
+            self.event_field = ''
+            self.text = ''
+            return True
+        return False
+
+types = telegram_types()
+
+def RunBOT(always_run: bool = True, save_polling: bool = False):
+    def wrapper(func):
+        @wraps(func)
+        async def wrapped(*args, **kwargs):
+            if always_run == True:
+                if save_polling == True: # Save Polling 
+                    print(f"Detected Parameters always_run\nStatus: {always_run} (Always Running)\nSave Polling: {save_polling} (Saved Polling)\nRunning BOT")
+                    while True:
+                        await types.ExtractPolling(save_polling=True)
+                        await asyncio.sleep(1)
+                        await func(*args, **kwargs)
+                elif save_polling == False:
+                    print(f"Detected Parameters always_run\nStatus: {always_run} (Only Run Once)\nSave Polling: {save_polling} (Not Save Polling)\nRunning BOT")
+                    while True:
+                        await types.ExtractPolling(save_polling=False) # Not Save Polling
+                        await asyncio.sleep(1)
+                        await func(*args, **kwargs)
+            elif always_run == False:
+                if save_polling == True:
+                    print(f"Detected Parameters always_run\nStatus: {always_run} (Always Running)\nSave Polling: {save_polling} (Saved Polling)\nRunning BOT")
+                    await types.ExtractPolling(save_polling=True) # Save Polling 
+                    await asyncio.sleep(1)
+                    await func(*args, **kwargs)
+                elif save_polling == False:
+                    print(f"Detected Parameters always_run\nStatus: {always_run} (Only Run Once)\nSave Polling: {save_polling} (Not Save Polling)\nRunning BOT")
+                    await types.ExtractPolling(save_polling=False) # Not Save Polling
+                    await asyncio.sleep(1)
+                    await func(*args, **kwargs)
+            else:
+                print(f"Please Spesify always_run parameter\nIf Set To True BOT Will Receive The Latest Polls Continuously (Real Time) And Send Any Response Method Only Once\nIf Set To False BOT Will Receive Latest Poll Once And Send Any Response Method Only Once Then Bot Will Stop")
+        return wrapped
+    return wrapper
