@@ -74,8 +74,6 @@ class Bot:
                 r = await client.post(f"{endpoint}/sendMessage", data=payload)
                 r_data = r.json()
                 self.bot.Field.message_id = r_data["result"].get('message_id', '')
-                with open(f"msg.json", 'w') as w:
-                    w.write(json.dumps(r_data, indent=2))
                 return r_data
             
         # editMessageText
