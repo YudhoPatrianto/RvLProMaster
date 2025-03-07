@@ -13,3 +13,6 @@ RvLProMaster/config/.env
 
 # Hide pycache
 **/__pycache__
+
+# Hide Pycharm Settings
+**/.idea
