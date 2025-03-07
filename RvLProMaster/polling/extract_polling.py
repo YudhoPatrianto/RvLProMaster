@@ -126,9 +126,6 @@ class telegram_types:
                     self.callback_data = out_polling["callback_query"].get("data","")
                     self.message_id = out_polling["callback_query"]["message"].get("message_id", "")
                     self.channel_title = out_polling["callback_query"]["message"]["chat"].get("title", "")
-                    
-                with open(f"event.json", 'w') as w:
-                    w.write(json.dumps(out_polling, indent=2))
                 return self
             except:
                 pass
