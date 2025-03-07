@@ -42,7 +42,7 @@ class checkGempa:
 
 PullData = checkGempa()
 
-def RunGempa():
+def PollingGempa():
     def wrapper(func):
         @wraps(func)
         async def wrapped(*args, **kwargs):
@@ -50,3 +50,5 @@ def RunGempa():
             await func(*args, **kwargs)
         return wrapped
     return wrapper
+
+RunPollingGempa = PollingGempa()
