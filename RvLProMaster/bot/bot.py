@@ -73,7 +73,8 @@ class Bot:
             async with AsyncClient() as client:
                 r = await client.post(f"{endpoint}/sendMessage", data=payload)
                 r_data = r.json()
-                bot.Field.message_id = r_data["result"].get('message_id', '')
+                if 'result' in r_data:
+                    bot.Field.message_id = r_data["result"].get('message_id', '')
                 return r_data
             
         # editMessageText
