@@ -81,7 +81,8 @@ class Bot:
             chat_id: str | int | None = None,
             message_id: str | int | None = None,
             text: str | None = None,
-            parse_mode: Literal['HTML', 'Markdown', 'MarkdownV2'] = 'MarkdownV2'
+            parse_mode: Literal['HTML', 'Markdown', 'MarkdownV2'] = 'MarkdownV2',
+            reply_markup: str | None = None
         ):
             """Use this method to edit text and game messages. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned. Note that business messages that were not sent by the bot and do not contain an inline keyboard can only be edited within 48 hours from the time they were sent.
             Args:
@@ -89,12 +90,14 @@ class Bot:
                 message_id (int | str | None): Required if inline_message_id is not specified. Identifier of the message to edit
                 text (str | None): 	New text of the message, 1-4096 characters after entities parsing
                 parse_mode (Literal[&#39;HTML&#39;, &#39;Markdown&#39;, &#39;MarkdownV2&#39;]): Mode for parsing entities in the message text.
+                reply_markup (str | None): A JSON-serialized object for an inline keyboard.
             """
             payload = {
                 'chat_id': chat_id,
                 'message_id': message_id,
                 'text': text,
-                'parse_mode': parse_mode
+                'parse_mode': parse_mode,
+                'reply_markup': str(reply_markup)
             }
             async with AsyncClient() as client:
                 r = await client.post(f"{endpoint}/editMessageText", data=payload)
