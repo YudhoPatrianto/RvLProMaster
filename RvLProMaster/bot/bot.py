@@ -67,7 +67,7 @@ class Bot:
                 'parse_mode': parse_mode,
                 'disable_notification': disable_notification,
                 'protect_content': protect_content,
-                'reply_markup': str(reply_markup),
+                'reply_markup': reply_markup,
                 'reply_to_message_id': reply_message
             }
             async with AsyncClient() as client:
@@ -97,7 +97,7 @@ class Bot:
                 'message_id': message_id,
                 'text': text,
                 'parse_mode': parse_mode,
-                'reply_markup': str(reply_markup)
+                'reply_markup': reply_markup
             }
             async with AsyncClient() as client:
                 r = await client.post(f"{endpoint}/editMessageText", data=payload)
