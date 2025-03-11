@@ -8,7 +8,20 @@ import asyncio
 
 class telegram_types:
     def __init__(self):
+        # Event Field
+        self.event_field = ''
+        # Reset Polling
         ResetPolling(self)
+        # Message
+        self.message = self.Message()
+        # Chat Join Request
+        self.chat_join_request = self.ChatJoinRequest()
+        # New Chat Member
+        self.new_chat_participant = self.NewChatParticipant()
+        # Left Chat Participant
+        self.left_chat_participant = self.LeftChatParticipant()
+        # Channel
+        self.channel_post = self.Channel()
 
     # Save Polling 
     def savePolling(self, out_polling):
@@ -22,89 +35,263 @@ class telegram_types:
     async def ExtractPolling(self, save_polling: bool = False):
         while True:
             try:
-                out_polling = await polling()                
+                out_polling = await polling()     
                 # Group
                 if 'message' in out_polling:
-                    # Group Information
-                    self.chat_id = out_polling['message']['chat'].get('id','')
-                    self.text = out_polling['message'].get('text','')
-                    self.reply_message = out_polling['message'].get('message_id', '')
-                    self.group_title = out_polling["message"]["chat"].get("title", "")
+                    # [message][from]
+                    self.message.From.id = out_polling['message']['from'].get('id','')
+                    self.message.From.first_name = out_polling['message']['from'].get('first_name','')
+                    self.message.From.last_name = out_polling['message']['from'].get('last_name','')
+                    self.message.From.username = out_polling['message']['from'].get('username','')
                     
-                    # User Information
-                    self.first_name = out_polling['message']['from'].get('first_name','')
-                    self.last_name = out_polling['message']['from'].get('last_name','')
-                    self.username = out_polling['message']['from'].get('username','')
-                    self.user_id = out_polling['message']['from'].get('id','')
+                    # [message]
+                    self.message.text = out_polling['message'].get('text','')
+                    self.message.date = out_polling['message'].get('date','')
+                    self.message.message_id = out_polling['message'].get('message_id','')
                     
-                    # new_chat_participant (UserJoined)
+                    # [message][chat]
+                    self.message.chat.id = out_polling['message']['chat'].get('id','')
+                    self.message.chat.title = out_polling['message']['chat'].get('title','')
+                    self.message.chat.username = out_polling['message']['chat'].get('username','')
+                    
+                    # UserJoined [new_chat_participant]
                     if 'new_chat_participant' in out_polling['message']:
+                        # Event Field
                         self.event_field = 'new_chat_participant'
-                        self.first_name_joined = out_polling['message']['new_chat_participant'].get('first_name','')
-                        self.last_name_joined = out_polling['message']['new_chat_participant'].get('last_name','')
-                        self.username_joined = out_polling['message']['new_chat_participant'].get('username','')
-                        self.user_id_joined = out_polling['message']['new_chat_participant'].get('id','')
-                        self.group_title_joined = out_polling["message"]["chat"].get("title", "")
-                    
-                    # left_chat_member (UserLeft)
-                    elif 'left_chat_participant' in out_polling['message']:
-                        self.event_field = 'left_chat_participant'
-                        self.first_name_left = out_polling['message']['left_chat_participant'].get('first_name','')
-                        self.last_name_left = out_polling['message']['left_chat_participant'].get('last_name','')
-                        self.username_left = out_polling['message']['left_chat_participant'].get('username','')
-                        self.user_id_left = out_polling['message']['left_chat_participant'].get('id','')
-                        self.group_title_left = out_polling["message"]["chat"].get("title", "")
                         
+                        # From
+                        self.new_chat_participant.message.From.id = out_polling['message']['from'].get('id','')
+                        self.new_chat_participant.message.From.first_name = out_polling['message']['from'].get('first_name','')
+                        self.new_chat_participant.message.From.last_name = out_polling['message']['from'].get('last_name','')
+                        self.new_chat_participant.message.From.username = out_polling['message']['from'].get('username','')
+                        
+                        # Groups
+                        self.new_chat_participant.message.chat.id = out_polling['message']['chat'].get('id','')
+                        self.new_chat_participant.message.chat.title = out_polling['message']['chat'].get('title','')
+                        self.new_chat_participant.message.chat.username = out_polling['message']['chat'].get('username','')
+                        
+                        # New Chat Participant
+                        self.new_chat_participant.message.new_chat_participant.id = out_polling['message']['new_chat_participant'].get('id','')
+                        self.new_chat_participant.message.new_chat_participant.first_name = out_polling['message']['new_chat_participant'].get('first_name','')
+                        self.new_chat_participant.message.new_chat_participant.last_name = out_polling['message']['new_chat_participant'].get('last_name','')
+                        self.new_chat_participant.message.new_chat_participant.username = out_polling['message']['new_chat_participant'].get('username','')
+                        
+                    # Left User [left_chat_participant]
+                    elif 'left_chat_participant' in out_polling['message']:
+                        # Event Field
+                        self.event_field = 'left_chat_participant'
+                        
+                        # From
+                        self.left_chat_participant.message.From.id = out_polling['message']['from'].get('id','')
+                        self.left_chat_participant.message.From.first_name = out_polling['message']['from'].get('first_name','')
+                        self.left_chat_participant.message.From.last_name = out_polling['message']['from'].get('last_name','')
+                        self.left_chat_participant.message.From.username = out_polling['message']['from'].get('username','')
+                        
+                        # Chat
+                        self.left_chat_participant.message.chat.id = out_polling['message']['chat'].get('id','')
+                        self.left_chat_participant.message.chat.title = out_polling['message']['chat'].get('title','')
+                        self.left_chat_participant.message.chat.username = out_polling['message']['chat'].get('username','')
+                        
+                        # Left Chat Participant
+                        self.left_chat_participant.message.left_chat_participant.id = out_polling['message']['left_chat_participant'].get('id','')
+                        self.left_chat_participant.message.left_chat_participant.first_name = out_polling['message']['left_chat_participant'].get('first_name','')
+                        self.left_chat_participant.message.left_chat_participant.last_name = out_polling['message']['left_chat_participant'].get('last_name','')
+                        self.left_chat_participant.message.left_chat_participant.username = out_polling['message']['left_chat_participant'].get('username','')
+                        
+                # Chat Join Request [chat_join_request]
                 elif 'chat_join_request' in out_polling:
+                    # Event Field
                     self.event_field = 'chat_join_request'
                     
-                    # User Information
-                    self.first_name_request = out_polling['chat_join_request']['from'].get('first_name','')
-                    self.last_name_request = out_polling['chat_join_request']['from'].get('last_name','')
-                    self.username_request = out_polling['chat_join_request']['from'].get('username','')
-                    self.user_id_request = out_polling['chat_join_request']['from'].get('id','')
-                    self.group_title_request = out_polling["chat_join_request"]["chat"].get("title", "")
-                
-                # Channel
+                    # ["chat_join_request"]["chat"]
+                    self.chat_join_request.chat.id = out_polling["chat_join_request"]["chat"].get('id','')
+                    self.chat_join_request.chat.title = out_polling["chat_join_request"]["chat"].get('title','')
+                    self.chat_join_request.chat.username = out_polling["chat_join_request"]["chat"].get('username','')
+                    
+                    # ["chat_join_request"]["from"]
+                    self.chat_join_request.From.id = out_polling["chat_join_request"]["from"].get('id','')
+                    self.chat_join_request.From.first_name = out_polling["chat_join_request"]["from"].get('first_name','')
+                    self.chat_join_request.From.last_name = out_polling["chat_join_request"]["from"].get('last_name','')
+                    self.chat_join_request.From.username = out_polling["chat_join_request"]["from"].get('username','')
+                    
+                    
+                # Channel [channel_post]
                 elif 'channel_post' in out_polling:
+                    # Event Field
                     self.event_field = 'channel_post'
                     
-                    # Channel Information
-                    self.channel_text = out_polling['channel_post'].get('text','')
-                    self.channel_chat_id = out_polling['channel_post']['chat'].get('id','')
-                    self.channel_reply_message = out_polling['channel_post'].get('message_id', '')
-                    self.channel_title = out_polling["channel_post"]["chat"].get("title", "")
+                    # Sender Chat
+                    self.channel_post.sender_chat.id  = out_polling['channel_post']['sender_chat'].get('id','')
+                    self.channel_post.sender_chat.title = out_polling['channel_post']['sender_chat'].get('title','')
                     
-                # reply_markup (Inline Keyboard/Buttons)
-                elif 'callback_query' in out_polling:
-                    self.callback_data = out_polling["callback_query"].get("data","")
-                    self.message_id = out_polling["callback_query"]["message"].get("message_id", "")
-                    self.channel_title = out_polling["callback_query"]["message"]["chat"].get("title", "")
+                    # Chat
+                    self.channel_post.chat.id = out_polling['channel_post']['chat'].get('id','')
+                    self.channel_post.chat.title = out_polling['channel_post']['chat'].get('title','')
+                    
+                    # channel_post
+                    self.channel_post.message_id = out_polling['channel_post'].get('message_id','')
+                    self.channel_post.text = out_polling['channel_post'].get('text','')
+                    
                 return self
             except:
                 pass
+
+    # types: message
+    class Message:
+        def __init__(self) -> None:
+            # Create Istance
+            self.From = self._from() # ["message"]["from"]
+            self.chat = self.Chat() # ["message"]["chat"]
+            
+            # message
+            self.text = ''
+            self.date = ''
+            self.message_id = ''
+
+        # ["message"]["from"]
+        class _from:
+            def __init__(self) -> None:
+                self.id = ''
+                self.first_name = ''
+                self.last_name = ''
+                self.username = ''
+        # ["message"]["chat"]
+        class Chat:
+            def __init__(self) -> None:
+                self.id = ''
+                self.title = ''
+                self.username = ''
+                
+    # types: chat_join_request
+    class ChatJoinRequest:
+        def __init__(self) -> None:
+            # Create Istance
+            self.From = self._from() # ["chat_join_request"]["from"]
+            self.chat = self.Chat() # ["chat_join_request"]["chat"]
+        # ["message"]["from"]
+        class _from:
+            def __init__(self) -> None:
+                self.id = ''
+                self.first_name = ''
+                self.last_name = ''
+                self.username = ''
+        # ["message"]["chat"]
+        class Chat:
+            def __init__(self) -> None:
+                self.id = ''
+                self.title = ''
+                self.username = ''
+                
+    # types: new_chat_participant
+    class NewChatParticipant:
+        def __init__(self) -> None:
+            self.message = self.Message()
+        
+        # ["message"]
+        class Message:
+            def __init__(self) -> None:
+                self.From = self._from() # ["message"]["from"]
+                self.chat = self.Chat() # ["message"]["chat"]
+                self.new_chat_participant = self._new_chat_participant() # ["message"]["new_chat_participant"]
+            
+            # ["message"]["from"]
+            class _from:
+                def __init__(self) -> None:
+                    self.id = ''
+                    self.first_name = ''
+                    self.last_name = ''
+                    self.username = ''
+            # ["message"]["chat"]
+            class Chat:
+                def __init__(self) -> None:
+                    self.id = ''
+                    self.title = ''
+                    self.username = ''
+            
+            class _new_chat_participant:
+                def __init__(self) -> None:
+                    self.id = ''
+                    self.first_name = ''
+                    self.last_name = ''
+                    self.username = ''
+                    
+    # types: left_chat_participant
+    class LeftChatParticipant:
+        def __init__(self) -> None:
+            # Create Istance
+            self.message = self.Message() # ["left_chat_participant"]
+
+        class Message:
+            def __init__(self) -> None:
+                self.From = self._from() # ["left_chat_participant"]["from"]
+                self.chat = self.Chat() # ["left_chat_participant"]["chat"]
+                self.left_chat_participant = self._left_chat_participant() # ["left_chat_participant"]
+
+            # ["message"]["from"]
+            class _from:
+                def __init__(self) -> None:
+                    self.id = ''
+                    self.first_name = ''
+                    self.last_name = ''
+                    self.username = ''
+            # ["message"]["chat"]
+            class Chat:
+                def __init__(self) -> None:
+                    self.id = ''
+                    self.title = ''
+                    self.username = ''
+                    
+            class _left_chat_participant:
+                def __init__(self) -> None:
+                    self.id = ''
+                    self.first_name = ''
+                    self.last_name = ''
+                    self.username = ''
     
+    # types: channel_post                    
+    class Channel:
+        def __init__(self) -> None:
+            self.sender_chat = self.SenderChat()
+            self.chat = self.Chat()
+            
+            # Information
+            self.message_id = ''
+            self.text = ''
+        
+        # Sender Chat [channel_post][sender_chat]
+        class SenderChat:
+            def __init__(self) -> None:
+                self.id = ''
+                self.title = ''
+        
+        # Chat [channel_post][chat]        
+        class Chat:
+            def __init__(self) -> None:
+                self.id = ''
+                self.title = ''
+
+
     def EventWatcher(self, EventSelector: Literal['UserRequest', 'UserJoined', 'UserLeft', 'Channel']) -> bool:
-        self.text = ''
+        self.message.text = ''
         # User Request To Join
         if EventSelector == "UserRequest" and self.event_field == 'chat_join_request':
             self.event_field = ''
-            self.text = ''
+            self.message.text = ''
             return True
         # User Joined 
         elif EventSelector == "UserJoined" and self.event_field == 'new_chat_participant':
             self.event_field = ''
-            self.text = ''
+            self.message.text = ''
             return True
         # User Left
         elif EventSelector == "UserLeft" and self.event_field == 'left_chat_participant':
             self.event_field = ''
-            self.text = ''
+            self.message.text = ''
             return True
         # Channel
         elif EventSelector == "Channel" and self.event_field == 'channel_post':
             self.event_field = ''
-            self.text = ''
+            self.message.text = ''
             return True
         return False
 
