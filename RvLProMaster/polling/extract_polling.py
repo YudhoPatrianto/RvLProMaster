@@ -1,5 +1,6 @@
 import json
 from .polling import polling
+from .reset_polling import ResetPolling
 from json import dumps
 from typing import Optional, Literal
 from functools import wraps
@@ -7,55 +8,8 @@ import asyncio
 
 class telegram_types:
     def __init__(self):
-        self.resetValues()
-    
-    def resetValues(self):
-        # Event Field
-        self.event_field = ''
+        ResetPolling(self)
 
-        # Message Information
-        self.chat_id = ''
-        self.text = ''
-        self.reply_message = ''
-        self.group_title = ''
-        
-        # User Information
-        self.first_name = ''
-        self.last_name = ''
-        self.username = ''
-        self.user_id = ''
-        
-        # new_chat_participant
-        self.first_name_joined = ''
-        self.last_name_joined = ''
-        self.username_joined = ''
-        self.user_id_joined = ''
-        self.group_title_joined = ''
-        
-        # left_chat_member
-        self.first_name_left = ''
-        self.last_name_left = ''
-        self.username_left = ''
-        self.user_id_left = ''
-        self.group_title_left = ''
-        
-        # chat_join_request
-        self.first_name_request = ''
-        self.last_name_request = ''
-        self.username_request = ''
-        self.user_id_request = ''
-        self.group_title_request = ''
-        
-        # Inline Keyboard/Buttons
-        self.callback_data = ''
-        self.message_id = ''
-
-        # Channel Information
-        self.channel_text = ''
-        self.channel_chat_id = ''
-        self.channel_reply_message = ''
-        self.channel_title = ''
-        
     # Save Polling 
     def savePolling(self, out_polling):
         if 'message' in out_polling:
@@ -129,7 +83,7 @@ class telegram_types:
                 return self
             except:
                 pass
-            
+    
     def EventWatcher(self, EventSelector: Literal['UserRequest', 'UserJoined', 'UserLeft', 'Channel']) -> bool:
         self.text = ''
         # User Request To Join
