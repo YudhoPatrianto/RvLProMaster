@@ -22,6 +22,8 @@ class telegram_types:
         self.left_chat_participant = self.LeftChatParticipant()
         # Channel
         self.channel_post = self.Channel()
+        # Callback Data
+        self.callback_query = self.CallbackQuery()
 
     # Save Polling 
     def savePolling(self, out_polling):
@@ -80,23 +82,7 @@ class telegram_types:
                     elif 'left_chat_participant' in out_polling['message']:
                         # Event Field
                         self.event_field = 'left_chat_participant'
-                        
-                        # From
-                        self.left_chat_participant.message.From.id = out_polling['message']['from'].get('id','')
-                        self.left_chat_participant.message.From.first_name = out_polling['message']['from'].get('first_name','')
-                        self.left_chat_participant.message.From.last_name = out_polling['message']['from'].get('last_name','')
-                        self.left_chat_participant.message.From.username = out_polling['message']['from'].get('username','')
-                        
-                        # Chat
-                        self.left_chat_participant.message.chat.id = out_polling['message']['chat'].get('id','')
-                        self.left_chat_participant.message.chat.title = out_polling['message']['chat'].get('title','')
-                        self.left_chat_participant.message.chat.username = out_polling['message']['chat'].get('username','')
-                        
-                        # Left Chat Participant
-                        self.left_chat_participant.message.left_chat_participant.id = out_polling['message']['left_chat_participant'].get('id','')
-                        self.left_chat_participant.message.left_chat_participant.first_name = out_polling['message']['left_chat_participant'].get('first_name','')
-                        self.left_chat_participant.message.left_chat_participant.last_name = out_polling['message']['left_chat_participant'].get('last_name','')
-                        self.left_chat_participant.message.left_chat_participant.username = out_polling['message']['left_chat_participant'].get('username','')
+
                         
                 # Chat Join Request [chat_join_request]
                 elif 'chat_join_request' in out_polling:
@@ -131,6 +117,21 @@ class telegram_types:
                     # channel_post
                     self.channel_post.message_id = out_polling['channel_post'].get('message_id','')
                     self.channel_post.text = out_polling['channel_post'].get('text','')
+                
+                # Callback Query [callback_query]
+                elif 'callback_query' in out_polling:
+                    self.callback_query.data = out_polling['callback_query'].get('data','') # ["callback_query"]["data"]
+                    
+                    # From [callback_query][from]
+                    self.callback_query.From.id = out_polling['callback_query']['from'].get('id','') # ["callback_query"]["from"]["id"]
+                    self.callback_query.From.first_name = out_polling['callback_query']['from'].get('first_name','') # ["callback_query"]["from"]["first_name"]
+                    self.callback_query.From.last_name = out_polling['callback_query']['from'].get('last_name','') # ["callback_query"]["from"]["last_name"]
+                    self.callback_query.From.username = out_polling['callback_query']['from'].get('username','') # ["callback_query"]["from"]["username"]
+                    
+                    # Chat [callback_query][message][chat]
+                    self.callback_query.message.chat.id = out_polling['callback_query']['message']['chat'].get('id','')
+                    self.callback_query.message.chat.title = out_polling['callback_query']['message']['chat'].get('title','')
+                    self.callback_query.message.chat.username = out_polling['callback_query']['message']['chat'].get('username','')
                     
                 return self
             except:
@@ -269,7 +270,32 @@ class telegram_types:
             def __init__(self) -> None:
                 self.id = ''
                 self.title = ''
-
+                
+    # Callback Data
+    class CallbackQuery:
+        def __init__(self) -> None:
+            # Create Istance
+            self.From = self._from() # ["callback_query"]["from"]
+            self.message = self.Message() # ["callback_query"]["message"]["chat"]
+            self.data = ''
+            
+            
+        class _from:
+            def __init__(self) -> None:
+                self.id = ''
+                self.first_name = ''
+                self.last_name = ''
+                self.username = ''
+                
+        class Message:
+            def __init__(self) -> None:
+                self.chat = self.Chat() # ["callback_query"]["message"]["chat"]
+            # ["message"]["chat"]
+            class Chat:
+                def __init__(self) -> None:
+                    self.id = ''
+                    self.title = ''
+                    self.username = ''
 
     def EventWatcher(self, EventSelector: Literal['UserRequest', 'UserJoined', 'UserLeft', 'Channel']) -> bool:
         self.message.text = ''
