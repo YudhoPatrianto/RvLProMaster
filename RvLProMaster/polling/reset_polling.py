@@ -1,44 +1,67 @@
 def ResetPolling(obj):
-
-    # Message Information
-    obj.chat_id = ''
-    obj.text = ''
-    obj.reply_message = ''
-    obj.group_title = ''
-
-    # User Information
-    obj.first_name = ''
-    obj.last_name = ''
-    obj.username = ''
-    obj.user_id = ''
-
-    # new_chat_participant
-    obj.first_name_joined = ''
-    obj.last_name_joined = ''
-    obj.username_joined = ''
-    obj.user_id_joined = ''
-    obj.group_title_joined = ''
-
-    # left_chat_member
-    obj.first_name_left = ''
-    obj.last_name_left = ''
-    obj.username_left = ''
-    obj.user_id_left = ''
-    obj.group_title_left = ''
-
+    # Event Field
+    obj.event_field = ''
+    
+    # message
+    obj.message.From.id = ''
+    obj.message.From.first_name = ''
+    obj.message.From.last_name = ''
+    obj.message.From.username = ''
+    obj.message.text = ''
+    obj.message.date = ''
+    obj.message.message_id = ''
+    obj.message.chat.id = ''
+    obj.message.chat.title = ''
+    obj.message.chat.username = ''
+    
+    # new_chat_member
+    obj.new_chat_participant.message.From.id = ''
+    obj.new_chat_participant.message.From.first_name = ''
+    obj.new_chat_participant.message.From.last_name = ''
+    obj.new_chat_participant.message.From.username = ''
+    obj.new_chat_participant.message.chat.id = ''
+    obj.new_chat_participant.message.chat.title = ''
+    obj.new_chat_participant.message.chat.username = ''
+    obj.new_chat_participant.message.new_chat_participant.id = ''
+    obj.new_chat_participant.message.new_chat_participant.first_name = ''
+    obj.new_chat_participant.message.new_chat_participant.last_name = ''
+    obj.new_chat_participant.message.new_chat_participant.username = ''
+    
+    # left_chat_participant
+    obj.left_chat_participant.message.From.id = ''
+    obj.left_chat_participant.message.From.first_name = ''
+    obj.left_chat_participant.message.From.last_name = ''
+    obj.left_chat_participant.message.From.username = ''
+    obj.left_chat_participant.message.chat.id = ''
+    obj.left_chat_participant.message.chat.title = ''
+    obj.left_chat_participant.message.chat.username = ''
+    obj.left_chat_participant.message.left_chat_participant.id = ''
+    obj.left_chat_participant.message.left_chat_participant.first_name = ''
+    obj.left_chat_participant.message.left_chat_participant.last_name = ''
+    obj.left_chat_participant.message.left_chat_participant.username = ''
+    
     # chat_join_request
-    obj.first_name_request = ''
-    obj.last_name_request = ''
-    obj.username_request = ''
-    obj.user_id_request = ''
-    obj.group_title_request = ''
-
-    # Inline Keyboard/Buttons
-    obj.callback_data = ''
-    obj.message_id = ''
-
-    # Channel Information
-    obj.channel_text = ''
-    obj.channel_chat_id = ''
-    obj.channel_reply_message = ''
-    obj.channel_title = ''
+    obj.chat_join_request.chat.id = ''
+    obj.chat_join_request.chat.title = ''
+    obj.chat_join_request.chat.username = ''
+    obj.chat_join_request.From.id = ''
+    obj.chat_join_request.From.first_name = ''
+    obj.chat_join_request.From.last_name = ''
+    obj.chat_join_request.From.username = ''
+    
+    # channel_post
+    obj.channel_post.sender_chat.id  = '' 
+    obj.channel_post.sender_chat.title = '' 
+    obj.channel_post.chat.id = '' 
+    obj.channel_post.chat.title = '' 
+    obj.channel_post.message_id =  ''
+    
+    # Callback Query
+    obj.callback_query.data = ''
+    obj.callback_query.From.id = ''
+    obj.callback_query.From.first_name = ''
+    obj.callback_query.From.last_name = ''
+    obj.callback_query.From.username = ''
+    obj.callback_query.message.chat.id = ''
+    obj.callback_query.message.chat.title = '' 
+    obj.callback_query.message.chat.username = '' 
