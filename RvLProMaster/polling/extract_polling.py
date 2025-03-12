@@ -82,6 +82,23 @@ class telegram_types:
                     elif 'left_chat_participant' in out_polling['message']:
                         # Event Field
                         self.event_field = 'left_chat_participant'
+                        
+                        # From
+                        self.left_chat_participant.message.From.id = out_polling['message']['from'].get('id','')
+                        self.left_chat_participant.message.From.first_name = out_polling['message']['from'].get('first_name','')
+                        self.left_chat_participant.message.From.last_name = out_polling['message']['from'].get('last_name','')
+                        self.left_chat_participant.message.From.username = out_polling['message']['from'].get('username','')
+                        
+                        # Chat
+                        self.left_chat_participant.message.chat.id = out_polling['message']['chat'].get('id','')
+                        self.left_chat_participant.message.chat.title = out_polling['message']['chat'].get('title','')
+                        self.left_chat_participant.message.chat.username = out_polling['message']['chat'].get('username','')
+                        
+                        # Left Chat Participant
+                        self.left_chat_participant.message.left_chat_participant.id = out_polling['message']['left_chat_participant'].get('id','')
+                        self.left_chat_participant.message.left_chat_participant.first_name = out_polling['message']['left_chat_participant'].get('first_name','')
+                        self.left_chat_participant.message.left_chat_participant.last_name = out_polling['message']['left_chat_participant'].get('last_name','')
+                        self.left_chat_participant.message.left_chat_participant.username = out_polling['message']['left_chat_participant'].get('username','')
 
                         
                 # Chat Join Request [chat_join_request]
