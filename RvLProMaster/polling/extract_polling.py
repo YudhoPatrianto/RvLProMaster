@@ -84,6 +84,9 @@ class telegram_types:
                         # Event Field
                         self.event_field = 'left_chat_participant'
                         
+                        # Message ID
+                        self.left_chat_participant.message.message_id = out_polling['message'].get('message_id','')
+                        
                         # From
                         self.left_chat_participant.message.From.id = out_polling['message']['from'].get('id','')
                         self.left_chat_participant.message.From.first_name = out_polling['message']['from'].get('first_name','')
@@ -248,6 +251,7 @@ class telegram_types:
                 self.From = self._from() # ["left_chat_participant"]["from"]
                 self.chat = self.Chat() # ["left_chat_participant"]["chat"]
                 self.left_chat_participant = self._left_chat_participant() # ["left_chat_participant"]
+                self.message_id = ''
 
             # ["message"]["from"]
             class _from:
