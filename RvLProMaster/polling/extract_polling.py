@@ -8,6 +8,8 @@ import time
 
 class telegram_types:
     def __init__(self):
+        # Event Field
+        self.event_field = ''
         # Message
         self.message = self.Message()
         # Chat Join Request
