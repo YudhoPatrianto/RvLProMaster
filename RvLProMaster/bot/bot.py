@@ -251,6 +251,35 @@ class Bot:
                         r = await client.post(f"{endpoint}/sendPhoto", data=payload, files=photo_binary)
                         r_data = r.json()
                         return r_data
+            
+        # answerCallbackQuery
+        async def answerCallbackQuery(self,
+            callback_query_id: str,
+            text: str | None = None,
+            show_alert: bool | None = None,
+            url: str | None = None,
+            cache_time: int | None = None
+        ):
+            """Use this method to send answers to callback queries sent from inline keyboards. The answer will be displayed to the user as a notification at the top of the chat screen or as an alert.
+
+            Args:
+                callback_query_id (str): Unique identifier for the query to be answered
+                text (str, optional): Text of the notification. If not specified, nothing will be shown to the user, 0-200 characters
+                show_alert (bool ): If true, an alert will be shown by the client instead of a notification at the top of the chat screen. Defaults to False.
+                url (str , optional): URL that will be opened by the user's client. If you have created a Game and accepted the conditions via @Botfather, specify the URL that opens your game – note that this will only work if the query comes from a callback_game button. Defaults to None.
+                cache_time (int, optional): The maximum amount of time in seconds that the result of the callback query may be cached client-side. Telegram apps will support caching starting in version 3.14. Defaults to 0.
+            """
+            async with AsyncClient() as client:
+                payload = {
+                    'callback_query_id': callback_query_id,
+                    'text': text,
+                    'show_alert': show_alert,
+                    'url': url,
+                    'cache_time': cache_time
+                }
+                r = await client.post(f"{endpoint}/answerCallbackQuery", data=payload)
+                r_data = r.json()
+                return r_data
     class field:
         """The Bot Types Field
         """
