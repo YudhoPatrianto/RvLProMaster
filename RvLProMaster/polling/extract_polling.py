@@ -1,17 +1,13 @@
 import json
 from .polling import polling
-from .reset_polling import ResetPolling
 from json import dumps
 from typing import Optional, Literal
 from functools import wraps
 import asyncio
+import time
 
 class telegram_types:
     def __init__(self):
-        # Event Field
-        self.event_field = ''
-        # Reset Polling
-        ResetPolling(self)
         # Message
         self.message = self.Message()
         # Chat Join Request
