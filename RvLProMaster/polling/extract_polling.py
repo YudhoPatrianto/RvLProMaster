@@ -143,6 +143,9 @@ class telegram_types:
                 elif 'callback_query' in out_polling:
                     self.callback_query.data = out_polling['callback_query'].get('data','') # ["callback_query"]["data"]
                     
+                    # Message ID
+                    self.callback_query.message.message_id = out_polling['callback_query'].get('message_id','') # ["callback_query"]["message_id"]
+                    
                     # From [callback_query][from]
                     self.callback_query.From.id = out_polling['callback_query']['from'].get('id','') # ["callback_query"]["from"]["id"]
                     self.callback_query.From.first_name = out_polling['callback_query']['from'].get('first_name','') # ["callback_query"]["from"]["first_name"]
@@ -315,6 +318,7 @@ class telegram_types:
         class Message:
             def __init__(self) -> None:
                 self.chat = self.Chat() # ["callback_query"]["message"]["chat"]
+                self.message_id = ''
             # ["message"]["chat"]
             class Chat:
                 def __init__(self) -> None:
