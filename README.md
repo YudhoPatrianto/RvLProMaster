@@ -30,7 +30,8 @@ import asyncio
 
 @RunBOT(always_run=True, save_polling=False) # Set True If You Want's Bot Always Run, But If You Set False BOT Only Run Just Once, If You Set save_polling into True Will saved polling, Default False (Not Saving Files)
 async def MyBots():
-    if types.text == "/start":
-        await bot.Methods.sendMessage(types.chat_id, "*Hi I'm From `/start`*","MarkdownV2")
+    if types.message.text == "/start":
+        await bot.Methods.sendMessage(types.message.chat.id, "*Hi I'm From `/start`*","MarkdownV2")
 
-asyncio.run(MyBots())
+if __name__ == "__main__":
+    asyncio.run(MyBots())
