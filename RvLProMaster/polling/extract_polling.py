@@ -144,7 +144,7 @@ class telegram_types:
                     self.callback_query.data = out_polling['callback_query'].get('data','') # ["callback_query"]["data"]
                     
                     # Message ID
-                    self.callback_query.message.message_id = out_polling['callback_query'].get('message_id','') # ["callback_query"]["message_id"]
+                    self.callback_query.message.message_id = out_polling['callback_query']['message'].get('message_id','') # ["callback_query"]["message_id"]
                     
                     # From [callback_query][from]
                     self.callback_query.From.id = out_polling['callback_query']['from'].get('id','') # ["callback_query"]["from"]["id"]
