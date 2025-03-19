@@ -7,11 +7,12 @@ class access_list:
     def __init__(self):
         self.username = ''
         self.file_path = "RvLProMaster/admin_utils/list_access.txt"
-
+        self.CheckFile(self.username)
+        
     def CheckFile(self, username: Any):
         try:
             self.username = username
-            if os.path.exists("list_access.txt"):
+            if os.path.exists("RvLProMaster/admin_utils/list_access.txt"):
                 pass
             else:
                 print(f"File list_access.txt Not Found Creating...")
