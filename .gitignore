@@ -16,3 +16,6 @@ RvLProMaster/config/.env
 
 # Hide Pycharm Settings
 **/.idea
+
+# Hide Admin List
+RvLProMaster/admin_utils/list_access.txt
