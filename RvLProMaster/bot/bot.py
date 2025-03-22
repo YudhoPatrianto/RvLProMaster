@@ -280,6 +280,20 @@ class Bot:
                 r = await client.post(f"{endpoint}/answerCallbackQuery", data=payload)
                 r_data = r.json()
                 return r_data
+        
+        # getChatMember
+        async def getChatMember(self,
+            chat_id: int | str,
+            user_id: int | str
+        ):
+            async with AsyncClient() as client:
+                payload = {
+                    'chat_id': chat_id,
+                    'user_id': user_id
+                }
+                r = await client.post(f"{endpoint}/getChatMember", data=payload)
+                r_data = r.json()
+                return r_data
     class field:
         """The Bot Types Field
         """
