@@ -294,6 +294,29 @@ class Bot:
                 r = await client.post(f"{endpoint}/getChatMember", data=payload)
                 r_data = r.json()
                 return r_data
+            
+        # getUserProfilePhotos
+        async def getUserProfilePhotos(self,
+            user_id: int | str,
+            offset: int | None = None,
+            limit: int | None = None
+        ):
+            """Use this method to get a list of profile pictures for a user. Returns a UserProfilePhotos object.
+
+            Args:
+                user_id (int | str): Unique identifier of the target user
+                offset (int | None, optional): Sequential number of the first photo to be returned. By default, all photos are returned. Defaults to None.
+                limit (int | None, optional): Limits the number of photos to be retrieved. Values between 1-100 are accepted. Defaults to None.
+            """
+            async with AsyncClient() as client:
+                payload = {
+                    'user_id': user_id,
+                    'offset': offset,
+                    'limit': limit
+                }
+                r = await client.post(f"{endpoint}/getUserProfilePhotos", data=payload)
+                r_data = r.json()
+                return r_data
     class field:
         """The Bot Types Field
         """
@@ -302,4 +325,3 @@ class Bot:
 
 # Create Istance
 bot = Bot()
-
