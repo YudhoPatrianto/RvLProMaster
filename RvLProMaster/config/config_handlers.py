@@ -1,50 +1,72 @@
-import os
-import time
-import sys
 from dotenv import load_dotenv
-
-load_dotenv()
+import os
+import glob
+import sys
 
 class Configs:
-    def __init__(self):
-        self.checkConfiguration()
+    def __init__(self) -> None:
+        self.result = ''
+        self.findEnv()
+        load_dotenv(self.result)
+
         self.token = os.getenv("token")
         self.url = os.getenv("endpoint")
         self.endpoint = f"{self.url}{self.token}"
         self.gemini_api_key = os.getenv("gemini_api_key")
         self.github_pat = os.getenv("github_pat")
-        
-    def checkConfiguration(self):
+
+        if os.path.isfile(self.result):
+            load_dotenv(self.result)
+        else:
+            print("No Authentication File Found, Creating")
+            self.CreateAuth()
+            self.clearScreen()
+            print("Configuration Success")
+            self.load_env_again()
+
+    def clearScreen(self):
+        os.system("clear" if sys.platform == "linux" else "cls")
+
+    def findEnv(self, dir="."):
+        for find_env in glob.iglob(f"{dir}/**/.env", recursive=True):
+            self.result = os.path.abspath(find_env)
+            return  
+        print("Authentication File Not Found.")
+
+    def CreateAuth(self):
         try:
-            if os.path.isfile("RvLProMaster/config/.env"):
-                pass
-            else:
-                print("No .env File Found\nCreating .env File")
-                time.sleep(2)
-                token = input("Enter Your Bot Token: ")
-                ask_endpoint = input("Are You Want's To Add Endpoint From https://github.com/tdlib/telegram-bot-api or You Want's To Use https://api.telegram.org? (y/N): ")
-                if ask_endpoint == "y" or ask_endpoint == "Y":  # Custom Endpoint
-                    custom_endpoint = input("Enter Your Custom Endpoint From https://github.com/tdlib/telegram-bot-api: \nExample: http://127.0.0.1/bot")
-                    if sys.platform == "linux":
-                        with open(r'.env', "w") as f: 
-                            f.write(f'token = "{token}"\nendpoint = "https://api.telegram.org/bot"')
-                            print(f"Configuration Saved!")
-                    if sys.platform == "win32":
-                        with open(r'.env', "w") as f: 
-                            f.write(f'token = "{token}"\nendpoint = "https://api.telegram.org/bot"')
-                            print(f"Configuration Saved!")
-                else:  # Default Endpoint https://api.telegram.org
-                    if sys.platform == "linux":
-                        with open(r'RvLProMaster/config/.env', "w") as f:
-                            f.write(f'token = "{token}"\nendpoint = "https://api.telegram.org/bot"')
-                            print(f"Configuration Saved!")
-                    elif sys.platform == "win32":
-                        with open(r'RvLProMaster\config\.env', "w") as f:
-                            f.write(f'token = "{token}"\nendpoint = "https://api.telegram.org/bot"')
-                            print(f"Configuration Saved!")
+            token = input("Please Input Your Token: ")
+            selector_endpoint = int(input(
+                "Please Choose Your Endpoint:\n"
+                "1. (Default) https://api.telegram.org/bot\n"
+                "2. (Custom) http://localhost/bot\n\n"
+                "Enter Your Choice: "
+            ))
+
+            endpoint = "https://api.telegram.org/bot" if selector_endpoint == 1 else input("Enter Custom Endpoint: ")
+
+            with open(".env", "w") as f:
+                f.write(f"token = '{token}'\nendpoint = '{endpoint}'\n")
+
+            print("Configuration Success!")
+
         except KeyboardInterrupt:
-            print(f"\nCanceling Configuration")
-            sys.exit(1)
+            print("\nExiting...")
+            sys.exit(0)
+
+    def load_env_again(self):
+        """ Reloads environment variables after creating .env """
+        self.findEnv()
+        load_dotenv(self.result)
+        
+        self.token = os.getenv("token")
+        self.url = os.getenv("endpoint")
+        self.endpoint = f"{self.url}{self.token}"
+        self.gemini_api_key = os.getenv("gemini_api_key")
+        self.github_pat = os.getenv("github_pat")
+
+        if os.path.isfile(self.result):
+            load_dotenv(self.result)
 
 # Create Object    
 Config = Configs()
