@@ -317,6 +317,48 @@ class Bot:
                 r = await client.post(f"{endpoint}/getUserProfilePhotos", data=payload)
                 r_data = r.json()
                 return r_data
+            
+        # restrictChatMember
+        async def restrictChatMember(self,
+            chat_id: int | str | None = None,
+            user_id: int | str | None = None,
+            can_send_messages: bool | None = None,
+            can_send_audios: bool | None = None,
+            can_send_documents: bool | None = None,
+            can_send_photos: bool | None = None,
+            can_send_videos: bool | None = None,
+            can_send_video_notes: bool | None = None,
+            can_send_voice_notes: bool | None = None,
+            can_send_polls: bool | None = None,
+            can_send_other_messages: bool | None = None,
+            can_add_web_page_previews: bool | None = None,
+            can_change_info: bool | None = None,
+            can_invite_users: bool | None = None,
+            can_pin_messages: bool | None = None,
+            until_date: int | str | None = None,
+        ):
+            async with AsyncClient() as client:
+                payload = {
+                    'chat_id': chat_id,
+                    'user_id': user_id,
+                    'can_send_messages': can_send_messages,
+                    'can_send_audios': can_send_audios,
+                    'can_send_documents': can_send_documents,
+                    'can_send_photos': can_send_photos,
+                    'can_send_videos': can_send_videos,
+                    'can_send_video_notes': can_send_video_notes,
+                    'can_send_voice_notes': can_send_voice_notes,
+                    'can_send_polls': can_send_polls,
+                    'can_send_other_messages': can_send_other_messages,
+                    'can_add_web_page_previews': can_add_web_page_previews,
+                    'can_change_info': can_change_info,
+                    'can_invite_users': can_invite_users,
+                    'can_pin_messages': can_pin_messages,
+                    'until_date': until_date
+                }
+                r = await client.post(f"{endpoint}/restrictChatMember", data=payload)
+                r_data = r.json()
+                return r_data
     class field:
         """The Bot Types Field
         """
