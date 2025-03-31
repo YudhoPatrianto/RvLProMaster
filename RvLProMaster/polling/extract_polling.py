@@ -1,6 +1,5 @@
 import json
 from .polling import polling
-from json import dumps
 from typing import Optional, Literal
 from functools import wraps
 import asyncio
@@ -25,12 +24,8 @@ class telegram_types:
 
     # Save Polling 
     def savePolling(self, out_polling):
-        if 'message' in out_polling:
-            with open('message.json', 'w') as f:
-                f.write(dumps(out_polling, indent=2))
-        elif 'channel_post' in out_polling:
-            with open('channel.json', 'w') as f:
-                f.write(dumps(out_polling, indent=2))
+        with open('event.json', 'w') as f:
+            f.write(json.dumps(out_polling, indent=2))
 
     async def ExtractPolling(self, save_polling: bool = False):
         while True:
