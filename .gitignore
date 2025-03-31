@@ -19,3 +19,6 @@ RvLProMaster/config/.env
 
 # Hide Admin List
 RvLProMaster/admin_utils/list_access.txt
+
+# Hide any Json file
+**/*.json
