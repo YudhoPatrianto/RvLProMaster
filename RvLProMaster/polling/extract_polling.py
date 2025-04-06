@@ -27,138 +27,133 @@ class telegram_types:
     def getCurrentTime(self):
         return datetime.now().strftime("%A, %d %B %Y %I.%M %p")
 
-    async def ExtractPolling(self, save_polling: bool | None = None):
+    async def ExtractPolling(self):
         while True:
             try:
-                out_polling = await polling()
-                if save_polling == True:
-                    with open('event.json', 'w') as f:
-                        f.write(json.dumps(out_polling, indent=2))
-                elif save_polling == False:
-                    pass
+                self.out_polling = await polling()
                 
 
                 # Group
-                if 'message' in out_polling:
+                if 'message' in self.out_polling:
                     # [message][from]
-                    self.message.From.id = out_polling['message']['from'].get('id','')
-                    self.message.From.first_name = out_polling['message']['from'].get('first_name','')
-                    self.message.From.last_name = out_polling['message']['from'].get('last_name','')
-                    self.message.From.username = out_polling['message']['from'].get('username','')
+                    self.message.From.id = self.out_polling['message']['from'].get('id','')
+                    self.message.From.first_name = self.out_polling['message']['from'].get('first_name','')
+                    self.message.From.last_name = self.out_polling['message']['from'].get('last_name','')
+                    self.message.From.username = self.out_polling['message']['from'].get('username','')
                     
                     # [message]
-                    self.message.text = out_polling['message'].get('text','')
-                    self.message.date = out_polling['message'].get('date','')
-                    self.message.message_id = out_polling['message'].get('message_id','')
+                    self.message.text = self.out_polling['message'].get('text','')
+                    self.message.date = self.out_polling['message'].get('date','')
+                    self.message.message_id = self.out_polling['message'].get('message_id','')
                     
                     # [message][chat]
-                    self.message.chat.id = out_polling['message']['chat'].get('id','')
-                    self.message.chat.title = out_polling['message']['chat'].get('title','')
-                    self.message.chat.username = out_polling['message']['chat'].get('username','')
+                    self.message.chat.id = self.out_polling['message']['chat'].get('id','')
+                    self.message.chat.title = self.out_polling['message']['chat'].get('title','')
+                    self.message.chat.username = self.out_polling['message']['chat'].get('username','')
                     
                     # UserJoined [new_chat_participant]
-                    if 'new_chat_participant' in out_polling['message']:
+                    if 'new_chat_participant' in self.out_polling['message']:
                         # Event Field
                         self.event_field = 'new_chat_participant'
                         
                         # Message ID
-                        self.new_chat_participant.message.message_id = out_polling['message'].get('message_id','')
+                        self.new_chat_participant.message.message_id = self.out_polling['message'].get('message_id','')
 
                         # From
-                        self.new_chat_participant.message.From.id = out_polling['message']['from'].get('id','')
-                        self.new_chat_participant.message.From.first_name = out_polling['message']['from'].get('first_name','')
-                        self.new_chat_participant.message.From.last_name = out_polling['message']['from'].get('last_name','')
-                        self.new_chat_participant.message.From.username = out_polling['message']['from'].get('username','')
+                        self.new_chat_participant.message.From.id = self.out_polling['message']['from'].get('id','')
+                        self.new_chat_participant.message.From.first_name = self.out_polling['message']['from'].get('first_name','')
+                        self.new_chat_participant.message.From.last_name = self.out_polling['message']['from'].get('last_name','')
+                        self.new_chat_participant.message.From.username = self.out_polling['message']['from'].get('username','')
                         
                         # Groups
-                        self.new_chat_participant.message.chat.id = out_polling['message']['chat'].get('id','')
-                        self.new_chat_participant.message.chat.title = out_polling['message']['chat'].get('title','')
-                        self.new_chat_participant.message.chat.username = out_polling['message']['chat'].get('username','')
+                        self.new_chat_participant.message.chat.id = self.out_polling['message']['chat'].get('id','')
+                        self.new_chat_participant.message.chat.title = self.out_polling['message']['chat'].get('title','')
+                        self.new_chat_participant.message.chat.username = self.out_polling['message']['chat'].get('username','')
                         
                         # New Chat Participant
-                        self.new_chat_participant.message.new_chat_participant.id = out_polling['message']['new_chat_participant'].get('id','')
-                        self.new_chat_participant.message.new_chat_participant.first_name = out_polling['message']['new_chat_participant'].get('first_name','')
-                        self.new_chat_participant.message.new_chat_participant.last_name = out_polling['message']['new_chat_participant'].get('last_name','')
-                        self.new_chat_participant.message.new_chat_participant.username = out_polling['message']['new_chat_participant'].get('username','')
+                        self.new_chat_participant.message.new_chat_participant.id = self.out_polling['message']['new_chat_participant'].get('id','')
+                        self.new_chat_participant.message.new_chat_participant.first_name = self.out_polling['message']['new_chat_participant'].get('first_name','')
+                        self.new_chat_participant.message.new_chat_participant.last_name = self.out_polling['message']['new_chat_participant'].get('last_name','')
+                        self.new_chat_participant.message.new_chat_participant.username = self.out_polling['message']['new_chat_participant'].get('username','')
                         
                     # Left User [left_chat_participant]
-                    elif 'left_chat_participant' in out_polling['message']:
+                    elif 'left_chat_participant' in self.out_polling['message']:
                         # Event Field
                         self.event_field = 'left_chat_participant'
                         
                         # Message ID
-                        self.left_chat_participant.message.message_id = out_polling['message'].get('message_id','')
+                        self.left_chat_participant.message.message_id = self.out_polling['message'].get('message_id','')
                         
                         # From
-                        self.left_chat_participant.message.From.id = out_polling['message']['from'].get('id','')
-                        self.left_chat_participant.message.From.first_name = out_polling['message']['from'].get('first_name','')
-                        self.left_chat_participant.message.From.last_name = out_polling['message']['from'].get('last_name','')
-                        self.left_chat_participant.message.From.username = out_polling['message']['from'].get('username','')
+                        self.left_chat_participant.message.From.id = self.out_polling['message']['from'].get('id','')
+                        self.left_chat_participant.message.From.first_name = self.out_polling['message']['from'].get('first_name','')
+                        self.left_chat_participant.message.From.last_name = self.out_polling['message']['from'].get('last_name','')
+                        self.left_chat_participant.message.From.username = self.out_polling['message']['from'].get('username','')
                         
                         # Chat
-                        self.left_chat_participant.message.chat.id = out_polling['message']['chat'].get('id','')
-                        self.left_chat_participant.message.chat.title = out_polling['message']['chat'].get('title','')
-                        self.left_chat_participant.message.chat.username = out_polling['message']['chat'].get('username','')
+                        self.left_chat_participant.message.chat.id = self.out_polling['message']['chat'].get('id','')
+                        self.left_chat_participant.message.chat.title = self.out_polling['message']['chat'].get('title','')
+                        self.left_chat_participant.message.chat.username = self.out_polling['message']['chat'].get('username','')
                         
                         # Left Chat Participant
-                        self.left_chat_participant.message.left_chat_participant.id = out_polling['message']['left_chat_participant'].get('id','')
-                        self.left_chat_participant.message.left_chat_participant.first_name = out_polling['message']['left_chat_participant'].get('first_name','')
-                        self.left_chat_participant.message.left_chat_participant.last_name = out_polling['message']['left_chat_participant'].get('last_name','')
-                        self.left_chat_participant.message.left_chat_participant.username = out_polling['message']['left_chat_participant'].get('username','')
+                        self.left_chat_participant.message.left_chat_participant.id = self.out_polling['message']['left_chat_participant'].get('id','')
+                        self.left_chat_participant.message.left_chat_participant.first_name = self.out_polling['message']['left_chat_participant'].get('first_name','')
+                        self.left_chat_participant.message.left_chat_participant.last_name = self.out_polling['message']['left_chat_participant'].get('last_name','')
+                        self.left_chat_participant.message.left_chat_participant.username = self.out_polling['message']['left_chat_participant'].get('username','')
 
                         
                 # Chat Join Request [chat_join_request]
-                elif 'chat_join_request' in out_polling:
+                elif 'chat_join_request' in self.out_polling:
                     # Event Field
                     self.event_field = 'chat_join_request'
                     
                     # ["chat_join_request"]["chat"]
-                    self.chat_join_request.chat.id = out_polling["chat_join_request"]["chat"].get('id','')
-                    self.chat_join_request.chat.title = out_polling["chat_join_request"]["chat"].get('title','')
-                    self.chat_join_request.chat.username = out_polling["chat_join_request"]["chat"].get('username','')
+                    self.chat_join_request.chat.id = self.out_polling["chat_join_request"]["chat"].get('id','')
+                    self.chat_join_request.chat.title = self.out_polling["chat_join_request"]["chat"].get('title','')
+                    self.chat_join_request.chat.username = self.out_polling["chat_join_request"]["chat"].get('username','')
                     
                     # ["chat_join_request"]["from"]
-                    self.chat_join_request.From.id = out_polling["chat_join_request"]["from"].get('id','')
-                    self.chat_join_request.From.first_name = out_polling["chat_join_request"]["from"].get('first_name','')
-                    self.chat_join_request.From.last_name = out_polling["chat_join_request"]["from"].get('last_name','')
-                    self.chat_join_request.From.username = out_polling["chat_join_request"]["from"].get('username','')
+                    self.chat_join_request.From.id = self.out_polling["chat_join_request"]["from"].get('id','')
+                    self.chat_join_request.From.first_name = self.out_polling["chat_join_request"]["from"].get('first_name','')
+                    self.chat_join_request.From.last_name = self.out_polling["chat_join_request"]["from"].get('last_name','')
+                    self.chat_join_request.From.username = self.out_polling["chat_join_request"]["from"].get('username','')
                     
                     
                 # Channel [channel_post]
-                elif 'channel_post' in out_polling:
+                elif 'channel_post' in self.out_polling:
                     # Event Field
                     self.event_field = 'channel_post'
                     
                     # Sender Chat
-                    self.channel_post.sender_chat.id  = out_polling['channel_post']['sender_chat'].get('id','')
-                    self.channel_post.sender_chat.title = out_polling['channel_post']['sender_chat'].get('title','')
+                    self.channel_post.sender_chat.id  = self.out_polling['channel_post']['sender_chat'].get('id','')
+                    self.channel_post.sender_chat.title = self.out_polling['channel_post']['sender_chat'].get('title','')
                     
                     # Chat
-                    self.channel_post.chat.id = out_polling['channel_post']['chat'].get('id','')
-                    self.channel_post.chat.title = out_polling['channel_post']['chat'].get('title','')
+                    self.channel_post.chat.id = self.out_polling['channel_post']['chat'].get('id','')
+                    self.channel_post.chat.title = self.out_polling['channel_post']['chat'].get('title','')
                     
                     # channel_post
-                    self.channel_post.message_id = out_polling['channel_post'].get('message_id','')
-                    self.channel_post.text = out_polling['channel_post'].get('text','')
+                    self.channel_post.message_id = self.out_polling['channel_post'].get('message_id','')
+                    self.channel_post.text = self.out_polling['channel_post'].get('text','')
                 
                 # Callback Query [callback_query]
-                elif 'callback_query' in out_polling:
-                    self.callback_query.data = out_polling['callback_query'].get('data','') # ["callback_query"]["data"]
-                    self.callback_query.id = out_polling['callback_query'].get('id','') # ["callback_query"]["id"]
+                elif 'callback_query' in self.out_polling:
+                    self.callback_query.data = self.out_polling['callback_query'].get('data','') # ["callback_query"]["data"]
+                    self.callback_query.id = self.out_polling['callback_query'].get('id','') # ["callback_query"]["id"]
                     
                     # Message ID
-                    self.callback_query.message.message_id = out_polling['callback_query']['message'].get('message_id','') # ["callback_query"]["message_id"]
+                    self.callback_query.message.message_id = self.out_polling['callback_query']['message'].get('message_id','') # ["callback_query"]["message_id"]
                     
                     # From [callback_query][from]
-                    self.callback_query.From.id = out_polling['callback_query']['from'].get('id','') # ["callback_query"]["from"]["id"]
-                    self.callback_query.From.first_name = out_polling['callback_query']['from'].get('first_name','') # ["callback_query"]["from"]["first_name"]
-                    self.callback_query.From.last_name = out_polling['callback_query']['from'].get('last_name','') # ["callback_query"]["from"]["last_name"]
-                    self.callback_query.From.username = out_polling['callback_query']['from'].get('username','') # ["callback_query"]["from"]["username"]
+                    self.callback_query.From.id = self.out_polling['callback_query']['from'].get('id','') # ["callback_query"]["from"]["id"]
+                    self.callback_query.From.first_name = self.out_polling['callback_query']['from'].get('first_name','') # ["callback_query"]["from"]["first_name"]
+                    self.callback_query.From.last_name = self.out_polling['callback_query']['from'].get('last_name','') # ["callback_query"]["from"]["last_name"]
+                    self.callback_query.From.username = self.out_polling['callback_query']['from'].get('username','') # ["callback_query"]["from"]["username"]
                     
                     # Chat [callback_query][message][chat]
-                    self.callback_query.message.chat.id = out_polling['callback_query']['message']['chat'].get('id','')
-                    self.callback_query.message.chat.title = out_polling['callback_query']['message']['chat'].get('title','')
-                    self.callback_query.message.chat.username = out_polling['callback_query']['message']['chat'].get('username','')
+                    self.callback_query.message.chat.id = self.out_polling['callback_query']['message']['chat'].get('id','')
+                    self.callback_query.message.chat.title = self.out_polling['callback_query']['message']['chat'].get('title','')
+                    self.callback_query.message.chat.username = self.out_polling['callback_query']['message']['chat'].get('username','')
                     
                 return self
             except:
@@ -356,6 +351,9 @@ class telegram_types:
 
 types = telegram_types()
 
+# Import Library
+from .save_polling import SavePolling
+
 def RunBOT(always_run: bool = True, save_polling: bool = False):
     def wrapper(func):
         @wraps(func)
@@ -363,7 +361,8 @@ def RunBOT(always_run: bool = True, save_polling: bool = False):
             if always_run == True and save_polling == True:
                 print(f"⚙️  Bot Running...\nAlways Run: {always_run}\nSave Polling: {save_polling}\nRunning At: {types.getCurrentTime()}")
                 while True:
-                    await types.ExtractPolling(save_polling=True)
+                    await types.ExtractPolling()
+                    SavePolling()
                     await asyncio.sleep(1)
                     await func(*args, **kwargs)
             elif always_run == True and save_polling == False:
@@ -375,7 +374,8 @@ def RunBOT(always_run: bool = True, save_polling: bool = False):
             elif always_run == False and save_polling == True:
                 print(f"⚙️  Bot Running...\nAlways Run: {always_run}\nSave Polling: {save_polling}\nRunning At: {types.getCurrentTime()}")
                 while True:
-                    await types.ExtractPolling(save_polling=True)
+                    await types.ExtractPolling()
+                    SavePolling()
                     await asyncio.sleep(1)
                     await func(*args, **kwargs)
             elif always_run == False and save_polling == False:
